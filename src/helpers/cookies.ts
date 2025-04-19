@@ -4,15 +4,15 @@ import { NextResponse } from "next/server";
 const accessToken: string = "sb_access_token";
 const refreshToken: string = "sb_refresh_token";
 
-const setAccessToken = (token: string, response: NextResponse) => {
+const setAccessToken = async (token: string, response: NextResponse) => {
   response.cookies.set({
     name: accessToken,
     value: token,
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // Only secure cookies in production
+    secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: 60 * 60, // 1 hour
-    sameSite: "strict", // Add SameSite attribute for extra security
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
 };
 
@@ -21,10 +21,10 @@ const setRefreshToken = (token: string, response: NextResponse) => {
     name: refreshToken,
     value: token,
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // Only secure cookies in production
+    secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: 60 * 60 * 24 * 30, // 30 days
-    sameSite: "strict", // Add SameSite attribute for extra security
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
 };
 
@@ -43,8 +43,8 @@ const removeTokesAtTheTimeOfSignOut = (response: NextResponse) => {
 };
 
 const getAccessToken = async (): Promise<string | null> => {
-  const cookieStore = cookies(); // Access the cookie store
-  const accessTokenValue = (await cookieStore).get(accessToken);
+  const cookieStore = await cookies();
+  const accessTokenValue = cookieStore.get(accessToken);
   // Return access token
   // If the access token is not found, return null
   if (accessTokenValue) {
