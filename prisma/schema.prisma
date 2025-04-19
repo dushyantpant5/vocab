@@ -343,7 +343,7 @@ model wordprogress {
   id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userid        String?        @db.Uuid
   wordid        String?        @db.Uuid
-  isseen        Boolean?       @default(false)
+  islearned     Boolean?       @default(false)
   lastseenat    DateTime?      @default(now()) @db.Timestamp(6)
   createdat     DateTime?      @default(now()) @db.Timestamp(6)
   updatedat     DateTime?      @default(now()) @db.Timestamp(6)
