@@ -21,7 +21,8 @@ export default function WordCard({
     difficultytag,
     synonyms,
     antonyms,
-}: TWord) {
+    showDoneButton = true,
+}: TWord & { showDoneButton?: boolean; }) {
     const [isDone, setIsDone] = useState(false);
 
     const handleMarkAsDone = async () => {
@@ -50,9 +51,24 @@ export default function WordCard({
     return (
         <Card className="bg-white rounded-2xl shadow-md p-4 sm:p-6 hover:shadow-xl transition duration-300 ease-in-out relative">
             <CardHeader className="pb-2 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
-                <CardTitle className="text-xl sm:text-2xl font-bold text-blue-600">
-                    {word.charAt(0).toUpperCase() + word.slice(1)}
-                </CardTitle>
+                <div className="flex items-center gap-2">
+                    <CardTitle className="text-xl sm:text-2xl font-bold text-blue-600">
+                        {word.charAt(0).toUpperCase() + word.slice(1)}
+                    </CardTitle>
+                    {/* 🔊 Pronounce Button */}
+                    <button
+                        onClick={() => {
+                            const utterance = new SpeechSynthesisUtterance(word);
+                            utterance.lang = 'en-US';
+                            speechSynthesis.speak(utterance);
+                        }}
+                        className="text-gray-500 hover:text-blue-500 cursor-pointer transition text-lg"
+                        title="Pronounce"
+                    >
+                        🔊
+                    </button>
+                </div>
+
                 <Badge className="text-xs bg-gray-200 text-gray-700 font-medium px-2 py-0.5 mt-1 sm:mt-0">
                     {difficultytag.charAt(0).toUpperCase() + difficultytag.slice(1)}
                 </Badge>
@@ -120,14 +136,14 @@ export default function WordCard({
                     </div>
 
                     {/* Mark as Done Button */}
-                    <Button
+                    {showDoneButton && <Button
                         variant="outline"
                         size="default"
                         onClick={handleMarkAsDone}
                         className="text-sm px-4 py-2 rounded-lg hover:scale-105 transition cursor-pointer self-end"
                     >
                         ✅ Mark as Done
-                    </Button>
+                    </Button>}
                 </div>
             </CardContent>
         </Card>
