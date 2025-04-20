@@ -31,8 +31,14 @@ const SignInPage = () => {
             }
 
             router.push("/dashboard");
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                if (err instanceof Error) {
+                    setError(err.message);  // Handle any errors
+                } else {
+                    setError("An unknown error occurred");
+                }
+            }
         } finally {
             setLoading(false);
         }
