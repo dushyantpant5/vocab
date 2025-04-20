@@ -1,10 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import prisma from "@/utils/prismaClient";
 import { getUserId, UserData } from "@/helpers/auth";
 
 export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { wordId: string } }
+  request: Request,
+  {
+    params,
+  }: {
+    params: Promise<{ wordId: string }>;
+  }
 ) {
   const { user, error }: UserData = await getUserId();
   if (error) {
@@ -15,17 +19,13 @@ export async function PATCH(
     return NextResponse.json({ error: "User ID not found" }, { status: 401 });
   }
 
-  if (!params || !params.wordId) {
+  const { wordId } = await params;
+
+  if (!wordId || wordId.length === 0) {
     return NextResponse.json(
       { error: "Params or Word ID not found" },
       { status: 400 }
     );
-  }
-
-  const { wordId } = params;
-
-  if (!wordId) {
-    return NextResponse.json({ error: "Word ID is required" }, { status: 400 });
   }
 
   try {
