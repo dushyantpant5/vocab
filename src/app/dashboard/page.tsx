@@ -39,8 +39,12 @@ export default function Dashboard() {
                 }
 
                 setWords(data);  // Store the fetched words in state
-            } catch (err: any) {
-                setError(err.message);  // Handle any errors
+            } catch (err: unknown) {
+                if (err instanceof Error) {
+                    setError(err.message);  // Handle any errors
+                } else {
+                    setError("An unknown error occurred");
+                }
             } finally {
                 setLoading(false);  // Set loading state to false after fetch is complete
             }
@@ -52,7 +56,11 @@ export default function Dashboard() {
     return (
         <div className="max-w-3xl mx-auto p-4 space-y-4">
             <h1 className="text-2xl font-semibold mb-4">🧠 Daily Word Dashboard</h1>
-            {words.length > 0 ? (
+            {loading ? (
+                <p className="text-center mt-10 text-blue-500">Loading...</p>
+            ) : error ? (
+                <p className="text-center mt-10 text-red-500">{error}</p>
+            ) : words.length > 0 ? (
                 words.map((word: TWord) => (
                     <WordCard
                         key={word.id}
