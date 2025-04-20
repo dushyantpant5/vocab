@@ -11,7 +11,7 @@ export default function LearnedPage() {
     useEffect(() => {
         const fetchLearnedWords = async () => {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/words/getLearnedWords`, {
+                const res = await fetch(`/api/words/getLearnedWords`, {
                     method: "GET",
                     credentials: "include",
                 });
