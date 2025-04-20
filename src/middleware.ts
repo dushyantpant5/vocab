@@ -1,13 +1,14 @@
-import { getAccessToken } from "@/helpers/cookies";
+import { getAccessToken } from "./helpers/cookies";
 import { verifyToken } from "@/helpers/tokenVerification";
 import { NextResponse } from "next/server";
 
 export async function middleware() {
   const accessToken = await getAccessToken();
-
   if (!accessToken) {
     return NextResponse.json(
-      { error: "Authentication required. Access token not found." },
+      {
+        error: "[Middleware]: Authentication required. Access token not found.",
+      },
       { status: 401 }
     );
   }
@@ -16,7 +17,10 @@ export async function middleware() {
 
   if (!isTokenValid) {
     return NextResponse.json(
-      { error: "Authentication required. Access token is invalid." },
+      {
+        error:
+          "[Middleware]: Authentication required. Access token is invalid.",
+      },
       { status: 401 }
     );
   }
@@ -25,5 +29,5 @@ export async function middleware() {
 }
 
 export const config = {
-  matcher: ["/api/protected"],
+  matcher: [],
 };

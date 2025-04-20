@@ -46,6 +46,6 @@ export async function POST(request: Request) {
 
   const { access_token, refresh_token } = data.session;
   // Set the tokens in cookies
-  await setTokensAtTheTimeOfSignIn(access_token, refresh_token, response);
+  setTokensAtTheTimeOfSignIn(access_token, refresh_token, response);
   return response;
 }
