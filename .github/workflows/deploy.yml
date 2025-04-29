@@ -24,31 +24,32 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Create .env file
-        run:
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
-          echo "DIRECT_URL=${{ secrets.DIRECT_URL }}" >> .env
-          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> .env
-          echo "SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}" >> .env
-
       - name: Generate Prisma Client
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
         run: npx prisma generate
 
       - name: Build project
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
         run: npm run build
 
       - name: Install Vercel CLI
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+        if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
         run: npm install -g vercel
 
       - name: Deploy to Vercel (Production)
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: vercel --prod --confirm --token=$VERCEL_TOKEN
+        run: vercel --prod --confirm
 
       - name: Deploy to Vercel (Preview)
-        if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+        if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: vercel --confirm --token=$VERCEL_TOKEN
+        run: vercel --confirm
