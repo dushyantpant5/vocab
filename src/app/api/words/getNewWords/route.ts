@@ -12,6 +12,7 @@ export async function GET() {
     return NextResponse.json({ error: "User ID not found" }, { status: 401 });
   }
 
+
   const unseenWords = await prisma.words.findMany({
     where: {
       OR: [
