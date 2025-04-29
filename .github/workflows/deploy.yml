@@ -1,16 +1,15 @@
-name: Deploy to Vercel
+name: Vercel Build & Deploy
 
 on:
   push:
     branches:
-      - '**'  # Trigger on push to any branch
-
+      - '**'
   pull_request:
     branches:
-      - '**'  # Trigger on PR to any branch
+      - '**'
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,17 +24,32 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Generate Prisma Client
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: npx prisma generate
+
+      - name: Build project
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: npm run build
+
       - name: Install Vercel CLI
+        if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
         run: npm install -g vercel
 
-      - name: Deploy to Vercel
+      - name: Deploy to Vercel (Production)
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: |
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "Deploying to production..."
-            vercel --prod --confirm --token=$VERCEL_TOKEN
-          else
-            echo "Deploying to preview..."
-            vercel --confirm --token=$VERCEL_TOKEN
-          fi
+        run: vercel --prod --yes --token=$VERCEL_TOKEN
+
+      - name: Deploy to Vercel (Preview)
+        if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: vercel --yes --token=$VERCEL_TOKEN

@@ -101,7 +101,7 @@ const SignUpPage = () => {
                             className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all disabled:bg-gray-400"
                             disabled={loading}
                         >
-                            {loading ? "Signing Un..." : "Sign Un"}
+                            {loading ? "Signing Un..." : "Sign Up"}
                         </button>
                     </div>
                 </form>
