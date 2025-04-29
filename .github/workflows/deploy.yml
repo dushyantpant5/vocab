@@ -46,10 +46,10 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: vercel --prod --confirm
+        run: vercel --prod --yes --token=$VERCEL_TOKEN
 
       - name: Deploy to Vercel (Preview)
         if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: vercel --confirm
+        run: vercel --yes --token=$VERCEL_TOKEN
