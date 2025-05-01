@@ -85,6 +85,9 @@ export async function POST(request: Request) {
     if(session?.access_token && session?.refresh_token){
       setTokensAtTheTimeOfSignIn(session.access_token, session.refresh_token, response);
     }
+    else{
+      throw new Error("Session or tokens are missing. Tokens not set in cookies.");
+    }
     return response;
   } catch (error) {
     return NextResponse.json(
