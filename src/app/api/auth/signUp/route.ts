@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import supabase from "../../../../utils/supabaseClient";
 import prisma from "@/utils/prismaClient";
 import { signUpSchema } from "@/zod-validator";
+import { setTokensAtTheTimeOfSignIn } from "@/helpers/cookies";
 
 export async function POST(request: Request) {
   const signUpData = await request.json();
@@ -61,7 +62,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { user } = data;
+    const { user, session } = data;
+
     const newUserProfile = await prisma.user_profiles.create({
       data: {
         email: user?.email ?? "",
@@ -71,10 +73,22 @@ export async function POST(request: Request) {
         updatedat: new Date(),
       },
     });
-    return NextResponse.json(
-      { message: "User created successfully", user: newUserProfile },
-      { status: 201 }
+
+    const response = NextResponse.json(
+      { 
+        message: "User Created Successfully", 
+        user: newUserProfile
+      },
+      {status: 201}
     );
+
+    if(session?.access_token && session?.refresh_token){
+      setTokensAtTheTimeOfSignIn(session.access_token, session.refresh_token, response);
+    }
+    else{
+      throw new Error("Session or tokens are missing. Tokens not set in cookies.");
+    }
+    return response;
   } catch (error) {
     return NextResponse.json(
       {
