@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import WordCard from "@/components/WordCard";
-import { TWord } from "@/app/dashboard/page"; // Adjust if your types are elsewhere
+import { TWord } from "@/app/(protected)/dashboard/page"; // Adjust if your types are elsewhere
 
 export default function LearnedPage() {
     const [learnedWords, setLearnedWords] = useState<TWord[]>([]);
