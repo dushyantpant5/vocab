@@ -10,21 +10,21 @@ export default function MobileTopBar() {
     return (
         <div className="lg:hidden">
             {/* Mobile Top Bar */}
-            <div className="bg-white shadow-md fixed top-0 left-0 w-full z-50 px-4 py-2 flex items-center justify-between">
+            <div className="bg-white/30 backdrop-blur-md border border-white/20 shadow-lg fixed top-0 left-0 w-full z-50 px-4 py-2 flex items-center justify-center">
 
                 <Link href="/">
-                    <h2 className="text-xl font-bold text-blue-600 cursor-pointer hover:bg-blue-100 rounded-md transition px-2 py-1">
+                    <h2 className="basis-1/2 text-3xl font-bold text-blue-600 cursor-pointer hover:bg-blue-100 rounded-md transition px-2 py-1 ">
                         Vocab
                     </h2>
                 </Link>
 
                 {/* Navbar Links */}
-                <div className="space-x-4">
+                <div className="space-x-4 basis-1/2 justify-items-center">
                     {navLinks.map((link) => (
                          link.label.includes('🔓 Logout')?
                          (
                              <Link key={link.href} href={link.href}>
-                             <div className="inline-block mx-4 px-4 py-2 rounded-md cursor-pointer text-sm text-white bg-black hover:bg-gray-800 transition">
+                             <div className="inline-block mx-4 px-4 py-2 rounded-md cursor-pointer text-sm text-white bg-black hover:bg-gray-800 transition ">
                              <button>{link.label}</button>
                              </div>
                              </Link>
