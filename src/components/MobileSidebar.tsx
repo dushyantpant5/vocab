@@ -3,6 +3,7 @@ import Link from 'next/link';
 const navLinks = [
     { href: '/dashboard', label: '📋 Dashboard' },
     { href: '/learned', label: '📘 Learned Words' },
+    {href: '/signOut', label: '🔓 Logout' }
 ];
 
 export default function MobileTopBar() {
@@ -20,11 +21,21 @@ export default function MobileTopBar() {
                 {/* Navbar Links */}
                 <div className="space-x-4">
                     {navLinks.map((link) => (
+                         link.label.includes('🔓 Logout')?
+                         (
+                             <Link key={link.href} href={link.href}>
+                             <div className="inline-block mx-4 px-4 py-2 rounded-md cursor-pointer text-sm text-white bg-black hover:bg-gray-800 transition">
+                             <button>{link.label}</button>
+                             </div>
+                             </Link>
+                         ):
+                         (
                         <Link key={link.href} href={link.href}>
                             <div className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 rounded-md transition">
                                 {link.label}
                             </div>
                         </Link>
+                         )
                     ))}
                 </div>
             </div>

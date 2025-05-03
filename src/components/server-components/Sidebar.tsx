@@ -5,6 +5,7 @@ const navLinks = [
     { href: '/dashboard', label: '📋 Dashboard' },
     { href: '/learned', label: '📘 Learned Words' },
     { href: '/signOut', label: '🔓 Logout' }
+
 ];
 
 export default function Sidebar() {
