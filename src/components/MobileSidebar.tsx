@@ -10,7 +10,12 @@ export default function MobileTopBar() {
         <div className="lg:hidden">
             {/* Mobile Top Bar */}
             <div className="bg-white shadow-md fixed top-0 left-0 w-full z-50 px-4 py-2 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-blue-600">🧠 WordMaster</h2>
+
+                <Link href="/">
+                    <h2 className="text-xl font-bold text-blue-600 cursor-pointer hover:bg-blue-100 rounded-md transition px-2 py-1">
+                        Vocab
+                    </h2>
+                </Link>
 
                 {/* Navbar Links */}
                 <div className="space-x-4">
