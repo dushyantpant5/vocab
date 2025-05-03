@@ -4,7 +4,7 @@ import Link from 'next/link';
 const navLinks = [
     { href: '/dashboard', label: '📋 Dashboard' },
     { href: '/learned', label: '📘 Learned Words' },
-    {href: '/logout', label: '🔓 Logout' }
+    {href: '/signOut', label: '🔓 Logout' }
 ];
 
 export default function Sidebar() {
