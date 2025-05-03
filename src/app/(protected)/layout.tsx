@@ -15,7 +15,7 @@ export default async function ProtectedLayout({ children }: { children: React.Re
             <div className="flex min-h-screen">
                 <Sidebar />
                 <MobileSidebar />
-                <section className="flex-1 p-6 bg-gray-50 mt-16 lg:mt-0">
+                <section className="flex-1 p-6 bg-gray-50 mt-20 lg:mt-0">
                     {children}
                 </section>
             </div>
