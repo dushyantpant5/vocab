@@ -13,7 +13,7 @@ export default function SignOutPage() {
             })
 
             if (res.ok) {
-                router.push('/')
+                window.location.href = '/'
             }
         }
         logout()
