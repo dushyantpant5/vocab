@@ -30,7 +30,7 @@ const SignInPage = () => {
                 throw new Error(data.error || "Invalid credentials");
             }
 
-            router.push("/dashboard");
+            router.push("/auth-callback?origin=dashboard"); // Redirect to the dashboard or any other page
         } catch (err: unknown) {
             if (err instanceof Error) {
                 if (err instanceof Error) {
