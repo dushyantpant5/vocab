@@ -1,11 +1,6 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-const navLinks = [
-  { href: "/dashboard", label: "📋 Dashboard" },
-  { href: "/learned", label: "📘 Learned Words" },
-  { href: "/signOut", label: "🔓 Logout" },
-];
 
 export default function MobileTopBar() {
   const [menuOpen, setMenuOpen] = useState(false); // state to track menu open/close
@@ -22,39 +17,27 @@ export default function MobileTopBar() {
             </h2>
           </Link>
         </div>
-        <div className="flex flex-col justify-items-end basis-1/2">
+        <div className="flex flex-col basis-1/2">
           {menuOpen ? (
-            navLinks.map((link) =>
-              link.label.includes("🔓 Logout") ? (
-                <Link key={link.href} href={link.href}>
-                  <div className="inline-block mx-4 px-4 py-2 rounded-md cursor-pointer text-sm text-white bg-black hover:bg-gray-800 transition ">
-                    <button>{link.label}</button>
-                  </div>
-                </Link>
-              ) : (
-                <Link key={link.href} href={link.href}>
-                  {link.label.includes("📋 Dashboard") ? (
-                    <>
-                      <div className="mx-18">
-                        <button
-                          onClick={toggleMenu}
-                          className="text-3xl font-bold text-black"
-                        >
-                          &times;
-                        </button>
-                      </div>
-                      <div className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 rounded-md transition">
-                        {link.label}
-                      </div>
-                    </>
-                  ) : (
-                    <div className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 rounded-md transition">
-                      {link.label}
-                    </div>
-                  )}
-                </Link>
-              )
-            )
+            <>
+              <div className="mx-18">
+                <button
+                  onClick={toggleMenu}
+                  className="text-3xl font-bold text-black"
+                >
+                  &times;
+                </button>
+              </div>
+              <div className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 rounded-md transition">
+                <Link href="/dashboard">📋 Dashboard</Link>
+              </div>
+              <div className="inline-block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 rounded-md transition">
+                <Link href="/learned">📘 Learned Words</Link>
+              </div>
+              <div className=" mx-4 w-fit px-2 py-2 rounded-md cursor-pointer text-sm text-white bg-black hover:bg-gray-800 transition ">
+                <button>🔓 Logout</button>
+              </div>
+            </>
           ) : (
             <button
               onClick={toggleMenu}
