@@ -1,5 +1,5 @@
 import axios from "axios";
-import { TWord } from "@/app/dashboard/page";
+import { TWord } from "@/app/(protected)/dashboard/page";
 import {
     Card,
     CardContent,

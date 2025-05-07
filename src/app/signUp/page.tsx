@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 
 const SignUpPage = () => {
     const router = useRouter();
-    const [username , setUsername] = useState("");
+    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
@@ -22,7 +22,7 @@ const SignUpPage = () => {
                     "Content-Type": "application/json",
                 },
                 credentials: "include",
-                body: JSON.stringify({ username , email, password }),
+                body: JSON.stringify({ username, email, password }),
             });
 
             const data = await response.json();
@@ -31,7 +31,7 @@ const SignUpPage = () => {
                 throw new Error(data.error || "Invalid credentials");
             }
 
-            router.push("/dashboard");
+            router.push("/auth-callback?origin=dashboard"); // Redirect to the dashboard or any other page
         } catch (err: unknown) {
             if (err instanceof Error) {
                 if (err instanceof Error) {
@@ -48,7 +48,7 @@ const SignUpPage = () => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 px-6 py-12">
             <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8 border border-gray-200">
-                <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">Welcome Back</h2>
+                <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">Let’s get started!</h2>
                 <form onSubmit={handleSignUp} className="space-y-6">
                     <div>
                         <label className="block text-sm font-medium text-gray-700" htmlFor="email">
