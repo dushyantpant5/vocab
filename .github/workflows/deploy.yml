@@ -43,10 +43,13 @@ jobs:
 
       - name: Check environment variables
         run: |
-          echo "SUPABASE_URL=$SUPABASE_URL"
-          echo "SUPABASE_KEY=$SUPABASE_KEY"
-          echo "UPSTASH_REDIS_REST_URL=$UPSTASH_REDIS_REST_URL"
-          echo "UPSTASH_REDIS_REST_TOKEN=$UPSTASH_REDIS_REST_TOKEN"
+          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}"
+          echo "SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}"
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}"
+          echo "DIRECT_URL=${{ secrets.DIRECT_URL }}"
+          echo "UPSTASH_REDIS_REST_URL=${{ secrets.UPSTASH_REDIS_REST_URL }}"
+          echo "UPSTASH_REDIS_REST_TOKEN=${{ secrets.UPSTASH_REDIS_REST_TOKEN }}"
+          echo "VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}"
 
       - name: Install Vercel CLI
         if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
