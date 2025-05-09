@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prismaClient";
 import { getUserId, UserData } from "@/helpers/auth";
+import { redis } from "@/utils/redisClient";
 
 export async function PATCH(
   request: Request,
@@ -41,6 +42,14 @@ export async function PATCH(
         learnedAtDate: new Date(),
       },
     });
+
+    // After updating, invalidate the caches
+    const cacheKeyAll = `learnedWords:${user.id}:all`;
+    const cacheKeyDate = `learned:${user.id}:${
+      new Date().toISOString().split("T")[0]
+    }`; // Using current date for cache invalidation
+    await redis.del(cacheKeyAll); // Delete the cache for all learned words
+    await redis.del(cacheKeyDate); // Delete the cache for date-specific learned words
 
     return NextResponse.json(updatedWordProgress);
   } catch {
