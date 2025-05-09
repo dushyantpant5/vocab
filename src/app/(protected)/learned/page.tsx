@@ -11,48 +11,51 @@ export default function LearnedPage() {
 
     useEffect(() => {
         const fetchLearnedWords = async () => {
-            console.log("selcted date", selectedDate);
-            if(selectedDate===null)
-            {
-            try {
-                const res = await fetch(`/api/words/getLearnedWords`, {
-                    method: "GET",
-                    credentials: "include",
-                });
-                const data = await res.json();
-                console.log("data of if condition",data);
-                setLearnedWords(data.learnedWords || []);
-            } catch (err) {
-                console.error("Failed to fetch learned words:", err);
-            } finally {
-                setLoading(false);
+            setLoading(true);
+            if (selectedDate === null) {
+                try {
+                    const res = await fetch(`/api/words/getLearnedWords`, {
+                        method: "GET",
+                        credentials: "include",
+                    });
+                    const data = await res.json();
+                    setLearnedWords(data.learnedWords || []);
+                } catch (err) {
+                    console.error("Failed to fetch learned words:", err);
+                } finally {
+                    setLoading(false);
+                }
             }
-            }
-        else{
-            try {
-                const res = await fetch(`/api/words/getLearnedWordsByDate/${selectedDate}`, {
-                    method: "GET",
-                    credentials: "include",
-                });
-                const data = await res.json();
-                console.log(data);
-                setLearnedWords(data.learnedWords || []);
-            } catch (err) {
-                console.error("Failed to fetch learned words for selected date:", err);
-            } finally {
-                setLoading(false);
-            }
+            else {
+                try {
+                    const dateOnly = selectedDate.toISOString().split("T")[0];
+                    const res = await fetch(`/api/words/getLearnedWordsByDate/${dateOnly}`, {
+                        method: "GET",
+                        credentials: "include",
+                    });
+                    const data = await res.json();
+                    setLearnedWords(data.learnedWords || []);
+                } catch (err) {
+                    console.error("Failed to fetch learned words for selected date:", err);
+                } finally {
+                    setLoading(false);
+                }
             }
         };
-        console.log("selcted date", selectedDate);
         fetchLearnedWords();
     }, [selectedDate]);
+
 
     return (
         <div className="max-w-5xl mx-auto p-4 sm:p-8">
             <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">📘 Learned Words</h1>
-            <input type="date" className="border rounded px-3 py-1" onChange={(e) => setSelectedDate(new Date(e.target.value))} />
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">📘 Learned Words</h1>
+                <input type="date" className="border rounded px-3 py-1"
+                    value={selectedDate ? selectedDate.toISOString().split("T")[0] : ""}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setSelectedDate(value ? new Date(value) : null);
+                    }} />
 
             </div>
             {loading ? (
