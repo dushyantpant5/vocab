@@ -38,6 +38,7 @@ export async function PATCH(
       },
       data: {
         islearned: true,
+        learnedAtDate: new Date(),
       },
     });
 
