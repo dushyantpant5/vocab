@@ -14,7 +14,9 @@ const AuthCallBack = () => {
         // Make a request to your server-side callback to validate user
         const checkUserAuth = async () => {
             try {
-                const response = await fetch('/api/auth/callback');
+                const response = await fetch('/api/auth/callback', {
+                    credentials: 'include',
+                });
                 const data = await response.json();
 
                 if (data.success) {

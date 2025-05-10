@@ -10,6 +10,7 @@ export default function SignOutPage() {
         const logout = async () => {
             const res = await fetch('/api/auth/signOut', {
                 method: 'POST',
+                credentials: 'include',
             })
 
             if (res.ok) {
