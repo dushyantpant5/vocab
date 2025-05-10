@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import supabase from "@/utils/supabaseClient";
 import { removeTokesAtTheTimeOfSignOut } from "@/helpers/cookies";
 
-export async function POST(request: Request) {
+export async function GET(request: Request) {
   const { error } = await supabase.auth.signOut();
 
   if (error) {

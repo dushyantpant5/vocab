@@ -16,12 +16,12 @@ export default function SignOutPage() {
             while (attempts < maxAttempts) {
                 try {
                     const res = await fetch('/api/auth/signOut', {
-                        method: 'POST',
+                        method: 'GET',
                         credentials: 'include',
                     });
 
                     if (res.ok) {
-                        router.push(res.url);
+                        router.push('/');
                         return;
                     } else {
                         console.error("Logout failed");
