@@ -21,7 +21,7 @@ export default function SignOutPage() {
                     });
 
                     if (res.ok) {
-                        router.push('/');
+                        window.location.href = '/'
                         return;
                     } else {
                         console.error("Logout failed");
@@ -41,7 +41,7 @@ export default function SignOutPage() {
             }
 
             // After max attempts, redirect to homepage or handle the failure gracefully
-            router.push('/');
+            window.location.href = '/'
             setLoading(false);
         };
 

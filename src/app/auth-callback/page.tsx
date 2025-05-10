@@ -26,7 +26,7 @@ const AuthCallBack = () => {
 
                     if (data.success) {
                         // Redirect to origin or default dashboard
-                        router.push('/dashboard');
+                        window.location.href = origin ? `/${origin}` : '/dashboard'
                         return; // Exit after successful redirect
                     } else {
                         // If unauthorized, redirect to sign-in
