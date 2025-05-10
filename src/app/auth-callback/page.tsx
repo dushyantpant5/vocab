@@ -11,27 +11,43 @@ const AuthCallBack = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Make a request to your server-side callback to validate user
         const checkUserAuth = async () => {
-            try {
-                const response = await fetch('/api/auth/callback', {
-                    credentials: 'include',
-                });
-                const data = await response.json();
+            let attempts = 0;
+            const maxAttempts = 3; // Number of retry attempts
+            const retryDelay = 2000; // 2 seconds delay between retries
 
-                if (data.success) {
-                    // Redirect to origin or default dashboard
-                    router.push(origin ? `/${origin}` : '/dashboard');
-                } else {
-                    // If unauthorized, redirect to sign-in
-                    router.push('/sign-in');
+            while (attempts < maxAttempts) {
+                try {
+                    const response = await fetch('/api/auth/callback', {
+                        credentials: 'include',
+                        method: 'GET',
+                    });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        // Redirect to origin or default dashboard
+                        router.push(origin ? `/${origin}` : '/dashboard');
+                        return; // Exit after successful redirect
+                    } else {
+                        // If unauthorized, redirect to sign-in
+                        router.push('/signIn');
+                        return;
+                    }
+                } catch (err) {
+                    console.error(`Attempt ${attempts + 1} failed:`, err);
+                    attempts += 1;
+                    if (attempts < maxAttempts) {
+                        // Wait before retrying
+                        await new Promise((resolve) => setTimeout(resolve, retryDelay * Math.pow(2, attempts))); // Exponential backoff
+                    }
                 }
-            } catch (err) {
-                console.error("Error:", err);
-                router.push('/sign-in');
-            } finally {
-                setLoading(false);
+                finally {
+                    setLoading(false); // Set loading to false after attempts
+                }
             }
+
+            // After max attempts, redirect to sign-in
+            router.push('/signIn');
         };
 
         checkUserAuth();
@@ -51,7 +67,6 @@ const AuthCallBack = () => {
 
     return null; // Optionally, you can return null when redirecting is complete
 };
-
 
 const SuspenseWrapper = () => {
     return (
