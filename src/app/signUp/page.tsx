@@ -7,11 +7,16 @@ const SignUpPage = () => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [cpassword, setCpassword] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
     const handleSignUp = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (password !== cpassword) {
+            setError("Passwords do not match");
+            return;
+        }
         setLoading(true);
         setError(null);
 
@@ -92,6 +97,20 @@ const SignUpPage = () => {
                             className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
                         />
                     </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="cpassword">
+                            Confirm Password
+                        </label>
+                        <input
+                            type="password"
+                            id="cpassword"
+                            required
+                            placeholder="Confirm Password"
+                            value={cpassword}
+                            onChange={(e) => setCpassword(e.target.value)}
+                            className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
+                        />
+                    </div>
                     {error && (
                         <p className="text-sm text-red-500 text-center">{error}</p>
                     )}
@@ -101,7 +120,7 @@ const SignUpPage = () => {
                             className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all disabled:bg-gray-400"
                             disabled={loading}
                         >
-                            {loading ? "Signing Un..." : "Sign Up"}
+                            {loading ? "Signing Up..." : "Sign Up"}
                         </button>
                     </div>
                 </form>
