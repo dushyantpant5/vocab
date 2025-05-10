@@ -14,9 +14,12 @@ export default function SignOutPage() {
             })
 
             if (res.ok) {
-                window.location.href = '/'
+                router.push('/')
+            } else {
+                console.error("Logout failed");
             }
         }
+
         logout()
     }, [router])
 
