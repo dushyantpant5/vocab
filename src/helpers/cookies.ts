@@ -14,6 +14,7 @@ const setAccessToken = async (token: string, response: NextResponse) => {
     maxAge: 60 * 60, // 1 hour
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
+  return response;
 };
 
 const setRefreshToken = (token: string, response: NextResponse) => {
@@ -26,6 +27,7 @@ const setRefreshToken = (token: string, response: NextResponse) => {
     maxAge: 60 * 60 * 24 * 30, // 30 days
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
+  return response;
 };
 
 const setTokensAtTheTimeOfSignIn = (
@@ -38,8 +40,27 @@ const setTokensAtTheTimeOfSignIn = (
 };
 
 const removeTokesAtTheTimeOfSignOut = (response: NextResponse) => {
-  response.cookies.delete({ name: accessToken, path: "/" });
-  response.cookies.delete({ name: refreshToken, path: "/" });
+  response.cookies.set({
+    name: accessToken,
+    value: "",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 0,
+    expires: new Date(0),
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  });
+
+  response.cookies.set({
+    name: refreshToken,
+    value: "",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 0,
+    expires: new Date(0),
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  });
 };
 
 const getAccessToken = async (): Promise<string | null> => {

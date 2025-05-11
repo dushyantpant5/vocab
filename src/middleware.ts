@@ -1,33 +1,20 @@
 import { getAccessToken } from "./helpers/cookies";
 import { verifyToken } from "@/helpers/tokenVerification";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
-export async function middleware() {
+export async function middleware(request: NextRequest) {
+  console.log("Middleware triggered for protected route");
+
   const accessToken = await getAccessToken();
-  if (!accessToken) {
-    return NextResponse.json(
-      {
-        error: "[Middleware]: Authentication required. Access token not found.",
-      },
-      { status: 401 }
-    );
-  }
 
-  const isTokenValid = await verifyToken(accessToken);
-
-  if (!isTokenValid) {
-    return NextResponse.json(
-      {
-        error:
-          "[Middleware]: Authentication required. Access token is invalid.",
-      },
-      { status: 401 }
-    );
+  if (!accessToken || !(await verifyToken(accessToken))) {
+    const callBackURL = new URL("/auth-callback", request.nextUrl.origin);
+    return NextResponse.redirect(callBackURL);
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [],
+  matcher: ["/dashboard", "/learned"],
 };

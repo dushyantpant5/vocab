@@ -37,20 +37,52 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
         run: npm run build
+
+      - name: Check environment variables
+        run: |
+          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}"
+          echo "SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}"
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}"
+          echo "DIRECT_URL=${{ secrets.DIRECT_URL }}"
+          echo "UPSTASH_REDIS_REST_URL=${{ secrets.UPSTASH_REDIS_REST_URL }}"
+          echo "UPSTASH_REDIS_REST_TOKEN=${{ secrets.UPSTASH_REDIS_REST_TOKEN }}"
+          echo "VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}"
 
       - name: Install Vercel CLI
         if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
         run: npm install -g vercel
 
+      # Deploy to Vercel Production
       - name: Deploy to Vercel (Production)
         if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: vercel --prod --yes --token=$VERCEL_TOKEN
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+        run: |
+          echo "SUPABASE_URL=$SUPABASE_URL"
+          echo "SUPABASE_KEY=$SUPABASE_KEY"
+          echo "UPSTASH_REDIS_REST_URL=$UPSTASH_REDIS_REST_URL"
+          echo "UPSTASH_REDIS_REST_TOKEN=$UPSTASH_REDIS_REST_TOKEN"
+          vercel --prod --yes --token=$VERCEL_TOKEN
 
+      # Deploy to Vercel Preview
       - name: Deploy to Vercel (Preview)
         if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: vercel --yes --token=$VERCEL_TOKEN
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+        run: |
+          echo "SUPABASE_URL=$SUPABASE_URL"
+          echo "SUPABASE_KEY=$SUPABASE_KEY"
+          echo "UPSTASH_REDIS_REST_URL=$UPSTASH_REDIS_REST_URL"
+          echo "UPSTASH_REDIS_REST_TOKEN=$UPSTASH_REDIS_REST_TOKEN"
+          vercel --yes --token=$VERCEL_TOKEN
