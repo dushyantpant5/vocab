@@ -328,13 +328,15 @@ model users {
 }
 
 model user_profiles {
-  id           String         @id @db.Uuid
-  username     String         @unique @db.VarChar(255)
-  email        String         @unique @db.VarChar(255)
-  createdat    DateTime?      @default(now()) @db.Timestamp(6)
-  updatedat    DateTime?      @default(now()) @db.Timestamp(6)
-  users        users          @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  wordprogress wordprogress[]
+  id              String         @id @db.Uuid
+  username        String         @unique @db.VarChar(255)
+  email           String         @unique @db.VarChar(255)
+  phonenumber     String         @default("") 
+  dailywordcount  String         @default("") 
+  createdat       DateTime?      @default(now()) @db.Timestamp(6)
+  updatedat       DateTime?      @default(now()) @db.Timestamp(6)
+  users           users          @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  wordprogress    wordprogress[]
 
   @@schema("public")
 }

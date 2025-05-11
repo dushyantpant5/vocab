@@ -8,6 +8,8 @@ const SignUpPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [cpassword, setCpassword] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [wordCount, setWordCount] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
@@ -17,6 +19,7 @@ const SignUpPage = () => {
             setError("Passwords do not match");
             return;
         }
+        console.log(JSON.stringify(error))
         setLoading(true);
         setError(null);
 
@@ -27,7 +30,7 @@ const SignUpPage = () => {
                     "Content-Type": "application/json",
                 },
                 credentials: "include",
-                body: JSON.stringify({ username, email, password }),
+                body: JSON.stringify({ username, email, password , phoneNumber, wordCount}),
             });
 
             const data = await response.json();
@@ -111,8 +114,37 @@ const SignUpPage = () => {
                             className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
                         />
                     </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="cpassword">
+                            Phone Number
+                        </label>
+                        <input
+                            type="text"
+                            id="phonenumber"
+                            required
+                            placeholder="Phone Number"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="cpassword">
+                            Enter Number of Words you want to learn
+                        </label>
+                        <input
+                            type="text"
+                            id="number"
+                            required
+                            placeholder="Enter Number of words"
+                            value={wordCount}
+                            onChange={(e) => setWordCount(e.target.value)}
+                            className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
+                        />
+                    </div>
                     {error && (
-                        <p className="text-sm text-red-500 text-center">{error}</p>
+                        <p className="text-sm text-red-500 text-center">
+                            {error}</p>
                     )}
                     <div>
                         <button

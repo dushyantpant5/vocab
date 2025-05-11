@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { email, username, password } = signUpDataValidation.data;
+  const { email, username, password , phonenumber, dailywordcount} = signUpDataValidation.data;
 
   // Check if user with this email already exists in database
   const userWithEmail = await prisma.user_profiles.findUnique({
@@ -69,6 +69,8 @@ export async function POST(request: Request) {
         email: user?.email ?? "",
         username,
         id: user?.id, // Same user ID from Supabase Auth
+        phonenumber: phonenumber,
+        dailywordcount: dailywordcount,
         createdat: new Date(),
         updatedat: new Date(),
       },
