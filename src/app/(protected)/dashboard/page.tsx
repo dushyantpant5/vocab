@@ -78,7 +78,7 @@ export default function Dashboard() {
                     />
                 ))
             ) : (
-                <p className="text-center mt-10 text-red-500">Failed to load words</p>
+                <p className="text-center mt-10 text-red-500">No words found for your account yet.</p>
             )}
         </div>
     );
