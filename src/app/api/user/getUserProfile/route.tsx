@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prismaClient";
-import { redis } from "@/utils/redisClient";
 import { UserData, getUserId } from "@/helpers/auth";
 
 export async function GET() {
