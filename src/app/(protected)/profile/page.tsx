@@ -28,7 +28,6 @@ export default function ProfilePage() {
             credentials: "include",
           });
           const learnedWordCount = await wordRes.json();
-          console.log(learnedWordCount);
           setLearnedWordsCount(learnedWordCount.learnedWordsCount);
 
         } catch (err) {

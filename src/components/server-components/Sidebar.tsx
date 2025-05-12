@@ -1,7 +1,5 @@
 // components/Sidebar.tsx (for Desktop Only)
-"use client"
 import Link from "next/link";
-import { useState } from "react";
 
 const navLinks = [
   { href: "/dashboard", label: "📋 Dashboard" },
