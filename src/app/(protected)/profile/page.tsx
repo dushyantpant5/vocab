@@ -9,7 +9,7 @@ interface UserDetails {
 }
 export default function ProfilePage() {
   const [userDetails, setUserDetails]= useState<UserDetails| null>(null);
-  const [learnedWordsCount, setLearnedWordsCount] = useState("0");
+  const [learnedWordsCount, setLearnedWordsCount] = useState("");
   const [loading, setLoading] = useState(true);
   useEffect(() => {
       const fetchUserDetails = async () => {
