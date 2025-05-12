@@ -18,6 +18,8 @@ export async function GET() {
     select: {
       username: true,
       email: true,
+      phonenumber: true,
+      dailywordcount: true
     },
   });
 

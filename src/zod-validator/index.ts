@@ -18,7 +18,7 @@ const signUpSchema = z.object({
   .regex(/^\d+$/, "Daily word count must contain only digits")
   .refine((val) => {
     const num = Number(val);
-    return num >= 1 && num <= 100;
+    return num >= 1 && num <= 20;
   }, {
     message: "Daily word count must be between 1 and 100",
   }),

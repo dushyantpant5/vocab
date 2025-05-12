@@ -8,8 +8,8 @@ const SignUpPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [cpassword, setCpassword] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [wordCount, setWordCount] = useState("");
+    const [phonenumber, setPhonenumber] = useState("");
+    const [dailywordcount, setDailywordcount] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
@@ -24,17 +24,18 @@ const SignUpPage = () => {
         setError(null);
 
         try {
+            console.log("in signup page",phonenumber, dailywordcount);
             const response = await fetch("/api/auth/signUp", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 credentials: "include",
-                body: JSON.stringify({ username, email, password , phoneNumber, wordCount}),
+                body: JSON.stringify({ username, email, password , phonenumber, dailywordcount}),
             });
 
             const data = await response.json();
-
+            console.log("data");
             if (!response.ok) {
                 throw new Error(data.error || "Invalid credentials");
             }
@@ -43,6 +44,8 @@ const SignUpPage = () => {
         } catch (err: unknown) {
             if (err instanceof Error) {
                 if (err instanceof Error) {
+                    console.error(err);              // ✅ This logs full error stack + message
+                    console.log(err);  
                     setError(err.message);  // Handle any errors
                 } else {
                     setError("An unknown error occurred");
@@ -123,8 +126,8 @@ const SignUpPage = () => {
                             id="phonenumber"
                             required
                             placeholder="Phone Number"
-                            value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            value={phonenumber}
+                            onChange={(e) => setPhonenumber(e.target.value)}
                             className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
                         />
                     </div>
@@ -137,8 +140,8 @@ const SignUpPage = () => {
                             id="number"
                             required
                             placeholder="Enter Number of words"
-                            value={wordCount}
-                            onChange={(e) => setWordCount(e.target.value)}
+                            value={dailywordcount}
+                            onChange={(e) => setDailywordcount(e.target.value)}
                             className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
                         />
                     </div>
