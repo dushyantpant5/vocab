@@ -8,8 +8,6 @@ const SignUpPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [cpassword, setCpassword] = useState("");
-    const [phonenumber, setPhonenumber] = useState("");
-    const [dailywordcount, setDailywordcount] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
@@ -24,14 +22,13 @@ const SignUpPage = () => {
         setError(null);
 
         try {
-            console.log("in signup page",phonenumber, dailywordcount);
             const response = await fetch("/api/auth/signUp", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 credentials: "include",
-                body: JSON.stringify({ username, email, password , phonenumber, dailywordcount}),
+                body: JSON.stringify({ username, email, password}),
             });
 
             const data = await response.json();
@@ -114,34 +111,6 @@ const SignUpPage = () => {
                             placeholder="Confirm Password"
                             value={cpassword}
                             onChange={(e) => setCpassword(e.target.value)}
-                            className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700" htmlFor="cpassword">
-                            Phone Number
-                        </label>
-                        <input
-                            type="text"
-                            id="phonenumber"
-                            required
-                            placeholder="Phone Number"
-                            value={phonenumber}
-                            onChange={(e) => setPhonenumber(e.target.value)}
-                            className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700" htmlFor="cpassword">
-                            Enter Number of Words you want to learn
-                        </label>
-                        <input
-                            type="text"
-                            id="number"
-                            required
-                            placeholder="Enter Number of words"
-                            value={dailywordcount}
-                            onChange={(e) => setDailywordcount(e.target.value)}
                             className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
                         />
                     </div>
