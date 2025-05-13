@@ -7,6 +7,25 @@ interface UserDetails {
   dailywordcount: string;
   // add other properties if available, like id, phone, etc.
 }
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend
+);
 export default function ProfilePage() {
   const [editDetails, setEditDetails] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -15,6 +34,41 @@ export default function ProfilePage() {
   const [phonenumber, setPhonenumber] = useState("");
   const [dailywordcount, setDailywordcount] = useState("");
   const [loading, setLoading] = useState(true);
+  const labels = [
+    "7-5-2025",
+    "8-5-2025",
+    "9-5-2025",
+    "10-5-25",
+    "11-5-25",
+    "12-5-25",
+    "13-5-25",
+  ];
+  const dataPoints = [1, 1, 3, 5, 4, 5, 3];
+  const hoursSpent = [1, 2, 1, 4, 2, 1, 2];
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        label: "Weekly Learned Word",
+        data: dataPoints,
+        fill: false,
+        borderColor: "rgb(0, 0, 0)",
+        tension: 0.1,
+      },
+    ],
+  };
+  const data1 = {
+    labels: labels,
+    datasets: [
+      {
+        label: "Weekly Hours spent on platform",
+        data: hoursSpent,
+        fill: false,
+        borderColor: "rgb(0, 0, 0)",
+        tension: 0.1,
+      },
+    ],
+  };
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
@@ -203,11 +257,27 @@ export default function ProfilePage() {
           </div>
           <div className="flex flex-col border-2 p-3 rounded-md shadow-md backdrop-blur-md">
             <div className="text-xl font-bold">Dashboard</div>
-            <div className="my-4">
-              <img
+            <div className="flex flex-row">
+              <div className="my-4 h-80 w-full">
+                {/* <img
                 src="https://i.ibb.co/tPLR7XJm/Learning-Metrics-Over-Time-Chart.png"
                 className="h-102"
-              ></img>
+              ></img> */}
+                <Line
+                  data={data}
+                  options={{
+                    maintainAspectRatio: false, // This allows custom height
+                  }}
+                ></Line>
+              </div>
+              <div className="my-4 h-80 w-full">
+                <Line
+                  data={data1}
+                  options={{
+                    maintainAspectRatio: false, // This allows custom height
+                  }}
+                ></Line>
+              </div>
             </div>
           </div>
         </div>
