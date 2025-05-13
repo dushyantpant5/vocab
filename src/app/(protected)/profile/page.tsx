@@ -63,8 +63,7 @@ export default function ProfilePage() {
       if (response.ok) {
         console.log("data");
         setEditDetails(true);
-      }
-      else {
+      } else {
         throw new Error(
           data.error ||
             "Please Enter 10 digit phone number or Please Enter word count between 1 to 20"
@@ -73,9 +72,9 @@ export default function ProfilePage() {
     } catch (err: unknown) {
       if (err instanceof Error) {
         if (err instanceof Error) {
-          console.error(err); // ✅ This logs full error stack + message
+          console.error(err);
           console.log(err);
-          setError(err.message); // Handle any errors
+          setError(err.message);
         } else {
           setError("An unknown error occurred");
         }
@@ -132,7 +131,9 @@ export default function ProfilePage() {
                 />
               </div>
               {error && (
-                <p className="text-sm text-red-500 text-center">Please Check Your Phone Number and Word Count</p>
+                <p className="text-sm text-red-500 text-center">
+                  Please Check Your Phone Number and Word Count
+                </p>
               )}
               <div>
                 <button
