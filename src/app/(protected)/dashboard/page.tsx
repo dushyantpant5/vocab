@@ -78,7 +78,7 @@ export default function Dashboard() {
                     />
                 ))
             ) : (
-                <p className="text-center mt-10 text-red-500">No words found for your account yet.</p>
+                <p className="text-center mt-10 text-red-500">You’ve mastered today’s list. Keep the momentum going!"</p>
             )}
         </div>
     );
