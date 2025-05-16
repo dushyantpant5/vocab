@@ -20,7 +20,8 @@ const signInSchema = z.object({
 
 const profileEditSchema = z.object({
   phonenumber: z.string()
-  .regex(/^\d{10}$/, "Phone number must contain only digits"),
+  .regex(/^\d{10}$/, "Phone number must contain only digits")
+  .optional(),
   dailywordcount: z
   .string()
   .regex(/^\d+$/, "Daily word count must contain only digits")
@@ -28,8 +29,9 @@ const profileEditSchema = z.object({
     const num = Number(val);
     return num >= 1 && num <= 20;
   }, {
-    message: "Daily word count must be between 1 and 100",
-  }),
+    message: "Daily word count must be between 1 to 20",
+  })
+  .optional()
 });
 
 export { signUpSchema, signInSchema , profileEditSchema};

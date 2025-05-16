@@ -31,8 +31,8 @@ export default function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [learnedWordsCount, setLearnedWordsCount] = useState("");
-  const [phonenumber, setPhonenumber] = useState("");
-  const [dailywordcount, setDailywordcount] = useState("");
+  const [phonenumber, setPhonenumber] = useState<string|undefined>(undefined);
+  const [dailywordcount, setDailywordcount] = useState<string|undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const labels = [
     "7-5-2025",
@@ -103,6 +103,7 @@ export default function ProfilePage() {
     setEditDetails(!editDetails);
   };
   const setProfileData = async () => {
+    console.log("phonenumber",phonenumber);
     try {
       const response = await fetch("/api/user/editUserProfile", {
         method: "PATCH",
@@ -153,34 +154,32 @@ export default function ProfilePage() {
               <div>
                 <label
                   className="block text-sm font-medium text-gray-700"
-                  htmlFor="email"
+                  htmlFor="phonenumber"
                 >
                   Enter Phone Number
                 </label>
                 <input
                   type="text"
                   id="phonenumber"
-                  required
                   placeholder="Enter 10 digit Registered Phone number"
-                  value={phonenumber}
-                  onChange={(e) => setPhonenumber(e.target.value)}
+                  value={phonenumber ?? ""}
+                  onChange={(e) => setPhonenumber(e.target.value === "" ? undefined : e.target.value)}
                   className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
                 />
               </div>
               <div>
                 <label
                   className="block text-sm font-medium text-gray-700"
-                  htmlFor="password"
+                  htmlFor="dailywords"
                 >
                   Enter Number of Words you want to learn
                 </label>
                 <input
                   type="text"
                   id="dailywords"
-                  required
                   placeholder="Enter No of Words"
-                  value={dailywordcount}
-                  onChange={(e) => setDailywordcount(e.target.value)}
+                  value={dailywordcount ?? ""}
+                  onChange={(e) => setDailywordcount(e.target.value === "" ? undefined: e.target.value)}
                   className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
                 />
               </div>

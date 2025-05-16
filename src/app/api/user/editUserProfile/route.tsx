@@ -4,9 +4,9 @@ import { UserData, getUserId } from "@/helpers/auth";
 import { profileEditSchema } from "../../../../zod-validator";
 
 export async function PATCH(request: Request) {
-  const signUpData = await request.json();
-  console.log("sigupadtda", signUpData);
-  const profileDataValidation = profileEditSchema.safeParse(signUpData);
+  const profileUpdateData = await request.json();
+  console.log("sigupadtda", profileUpdateData);
+  const profileDataValidation = profileEditSchema.safeParse(profileUpdateData);
 
   if (!profileDataValidation.success) {
     return NextResponse.json(
@@ -25,6 +25,8 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: "User ID not found" }, { status: 401 });
   }
   try {
+    if((phonenumber!==undefined && dailywordcount===undefined) || (phonenumber===undefined && dailywordcount!==undefined) || (phonenumber!==undefined && dailywordcount!==undefined))
+    {
     const updatedUser = await prisma.user_profiles.update({
       where: {
         id: user.id,
@@ -40,6 +42,10 @@ export async function PATCH(request: Request) {
     }
 
     return NextResponse.json(updatedUser);
+  }
+  else{
+    console.log("Nothing to change in schema");
+  }
   } catch (err) {
     console.error("Error fetching user:", err);
     return NextResponse.json(

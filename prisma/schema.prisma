@@ -331,8 +331,8 @@ model user_profiles {
   id              String         @id @db.Uuid
   username        String         @unique @db.VarChar(255)
   email           String         @unique @db.VarChar(255)
-  phonenumber     String         @default("") 
-  dailywordcount  String         @default("5")
+  phonenumber     String?         
+  dailywordcount  String?         @default("5")
   createdat       DateTime?      @default(now()) @db.Timestamp(6)
   updatedat       DateTime?      @default(now()) @db.Timestamp(6)
   users           users          @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)

@@ -6,7 +6,6 @@ import { setTokensAtTheTimeOfSignIn } from "@/helpers/cookies";
 
 export async function POST(request: Request) {
   const signUpData = await request.json();
-  console.log("sigupadtda",signUpData);
   const signUpDataValidation = signUpSchema.safeParse(signUpData);
 
   if (!signUpDataValidation.success) {
@@ -16,7 +15,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { email, username, password,  } = signUpDataValidation.data;
+  const { email, username, password  } = signUpDataValidation.data;
 
   // Check if user with this email already exists in database
   const userWithEmail = await prisma.user_profiles.findUnique({
