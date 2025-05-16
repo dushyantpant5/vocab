@@ -17,6 +17,7 @@ const SignUpPage = () => {
             setError("Passwords do not match");
             return;
         }
+        console.log(JSON.stringify(error))
         setLoading(true);
         setError(null);
 
@@ -27,11 +28,11 @@ const SignUpPage = () => {
                     "Content-Type": "application/json",
                 },
                 credentials: "include",
-                body: JSON.stringify({ username, email, password }),
+                body: JSON.stringify({ username, email, password}),
             });
 
             const data = await response.json();
-
+            console.log("data");
             if (!response.ok) {
                 throw new Error(data.error || "Invalid credentials");
             }
@@ -40,6 +41,8 @@ const SignUpPage = () => {
         } catch (err: unknown) {
             if (err instanceof Error) {
                 if (err instanceof Error) {
+                    console.error(err);              // ✅ This logs full error stack + message
+                    console.log(err);  
                     setError(err.message);  // Handle any errors
                 } else {
                     setError("An unknown error occurred");
@@ -112,7 +115,8 @@ const SignUpPage = () => {
                         />
                     </div>
                     {error && (
-                        <p className="text-sm text-red-500 text-center">{error}</p>
+                        <p className="text-sm text-red-500 text-center">
+                            {error}</p>
                     )}
                     <div>
                         <button
