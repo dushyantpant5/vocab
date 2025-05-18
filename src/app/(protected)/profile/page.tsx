@@ -126,11 +126,6 @@ export default function ProfilePage() {
 
       const data = await response.json();
       if (response.ok) {
-        const res = await fetch(`/api/user/getUserProfile`, {
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await res.json();
         setEditDetails(true);
       } else {
         throw new Error(
