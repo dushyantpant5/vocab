@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prismaClient";
+import { Prisma } from "@prisma/client";
 import { UserData, getUserId } from "@/helpers/auth";
 import { profileEditSchema } from "../../../../zod-validator";
 import cloudinary from "@/utils/cloudinary";
@@ -12,7 +13,7 @@ export async function PATCH(request: Request) {
   let dailywordcount = profileUpdateData.get("dailywordcount") as
     | string
     | undefined;
-  const updateData: any = {
+  const updateData: Prisma.user_profilesUpdateInput = {
     updatedat: new Date(), // always update timestamp
   };
   const { user, error }: UserData = await getUserId();
