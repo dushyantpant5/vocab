@@ -332,9 +332,10 @@ model user_profiles {
   username        String         @unique @db.VarChar(255)
   email           String         @unique @db.VarChar(255)
   phonenumber     String?         
-  dailywordcount  String?         @default("5")
+  dailywordcount  String?        @default("5")
   createdat       DateTime?      @default(now()) @db.Timestamp(6)
   updatedat       DateTime?      @default(now()) @db.Timestamp(6)
+  profileurl      String?        @default("https://i.ibb.co/DHNnmJxg/pexels-vojtech-okenka-127162-399772.jpg")
   users           users          @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   wordprogress    wordprogress[]
 
