@@ -31,8 +31,6 @@ const profileEditSchema = z.object({
   }, {
     message: "Daily word count must be between 1 to 20",
   })
-  .optional(),
-  profileurl: z.string()
   .optional()
 });
 
