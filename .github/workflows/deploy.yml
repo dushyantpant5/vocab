@@ -39,6 +39,9 @@ jobs:
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
           UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
           UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
         run: npm run build
 
       - name: Check environment variables
@@ -50,6 +53,9 @@ jobs:
           echo "UPSTASH_REDIS_REST_URL=${{ secrets.UPSTASH_REDIS_REST_URL }}"
           echo "UPSTASH_REDIS_REST_TOKEN=${{ secrets.UPSTASH_REDIS_REST_TOKEN }}"
           echo "VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}"
+          echo "CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}"
+          echo "CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}"
+          echo "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}"
 
       - name: Install Vercel CLI
         if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
@@ -64,11 +70,17 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
           UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
         run: |
           echo "SUPABASE_URL=$SUPABASE_URL"
           echo "SUPABASE_KEY=$SUPABASE_KEY"
           echo "UPSTASH_REDIS_REST_URL=$UPSTASH_REDIS_REST_URL"
           echo "UPSTASH_REDIS_REST_TOKEN=$UPSTASH_REDIS_REST_TOKEN"
+          echo "CLOUDINARY_CLOUD_NAME=$CLOUDINARY_CLOUD_NAME"
+          echo "CLOUDINARY_API_KEY=$CLOUDINARY_API_KEY"
+          echo "CLOUDINARY_API_SECRET=$CLOUDINARY_API_SECRET"
           vercel --prod --yes --token=$VERCEL_TOKEN
 
       # Deploy to Vercel Preview
@@ -80,9 +92,15 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
           UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
         run: |
           echo "SUPABASE_URL=$SUPABASE_URL"
           echo "SUPABASE_KEY=$SUPABASE_KEY"
           echo "UPSTASH_REDIS_REST_URL=$UPSTASH_REDIS_REST_URL"
           echo "UPSTASH_REDIS_REST_TOKEN=$UPSTASH_REDIS_REST_TOKEN"
+          echo "CLOUDINARY_CLOUD_NAME=$CLOUDINARY_CLOUD_NAME"
+          echo "CLOUDINARY_API_KEY=$CLOUDINARY_API_KEY"
+          echo "CLOUDINARY_API_SECRET=$CLOUDINARY_API_SECRET"
           vercel --yes --token=$VERCEL_TOKEN
