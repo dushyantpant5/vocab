@@ -328,15 +328,17 @@ model users {
 }
 
 model user_profiles {
-  id              String         @id @db.Uuid
-  username        String         @unique @db.VarChar(255)
-  email           String         @unique @db.VarChar(255)
-  phonenumber     String?         
-  dailywordcount  String?         @default("5")
-  createdat       DateTime?      @default(now()) @db.Timestamp(6)
-  updatedat       DateTime?      @default(now()) @db.Timestamp(6)
-  users           users          @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  wordprogress    wordprogress[]
+  id             String          @id @db.Uuid
+  username       String          @unique @db.VarChar(255)
+  email          String          @unique @db.VarChar(255)
+  createdat      DateTime?       @default(now()) @db.Timestamp(6)
+  updatedat      DateTime?       @default(now()) @db.Timestamp(6)
+  dailywordcount String?         @default("5")
+  phonenumber    String?
+  profileurl     String?         @default("https://i.ibb.co/DHNnmJxg/pexels-vojtech-okenka-127162-399772.jpg")
+  assignedwords  assignedwords[]
+  users          users           @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  wordprogress   wordprogress[]
 
   @@schema("public")
 }
@@ -359,19 +361,32 @@ model wordprogress {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model words {
-  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   word          String
   meaning       String
   sentence1     String?
   sentence2     String?
-  examtags      String[]       @default([])
+  examtags      String[]        @default([])
   difficultytag String?
-  synonyms      String[]       @default([])
-  antonyms      String[]       @default([])
-  createdat     DateTime?      @default(now()) @db.Timestamp(6)
-  updatedat     DateTime?      @default(now()) @db.Timestamp(6)
+  synonyms      String[]        @default([])
+  antonyms      String[]        @default([])
+  createdat     DateTime?       @default(now()) @db.Timestamp(6)
+  updatedat     DateTime?       @default(now()) @db.Timestamp(6)
+  assignedwords assignedwords[]
   wordprogress  wordprogress[]
 
+  @@schema("public")
+}
+
+model assignedwords {
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id       String?        @db.Uuid
+  word_id       String?        @db.Uuid
+  assigned_at   DateTime?      @default(now()) @db.Timestamp(6)
+  user_profiles user_profiles? @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  words         words?         @relation(fields: [word_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([user_id, word_id])
   @@schema("public")
 }
 
