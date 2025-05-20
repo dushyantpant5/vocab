@@ -5,6 +5,7 @@ interface UserDetails {
   email: string;
   phonenumber: string;
   dailywordcount: string;
+  profileurl: string;
   // add other properties if available, like id, phone, etc.
 }
 import { Line } from "react-chartjs-2";
@@ -31,8 +32,11 @@ export default function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [learnedWordsCount, setLearnedWordsCount] = useState("");
-  const [phonenumber, setPhonenumber] = useState<string|undefined>(undefined);
-  const [dailywordcount, setDailywordcount] = useState<string|undefined>(undefined);
+  const [phonenumber, setPhonenumber] = useState<string | undefined>(undefined);
+  const [dailywordcount, setDailywordcount] = useState<string | undefined>(
+    undefined
+  );
+  const [profileurl, setProfileurl] = useState<File | null>(null);
   const [loading, setLoading] = useState(true);
   const labels = [
     "7-5-2025",
@@ -102,21 +106,26 @@ export default function ProfilePage() {
   const handleProfile = () => {
     setEditDetails(!editDetails);
   };
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setProfileurl(file);
+    }
+  };
   const setProfileData = async () => {
-    console.log("phonenumber",phonenumber);
     try {
+      const formData = new FormData();
+      if (phonenumber) formData.append("phonenumber", phonenumber);
+      if (dailywordcount) formData.append("dailywordcount", dailywordcount);
+      if (profileurl) formData.append("profileurl", profileurl);
       const response = await fetch("/api/user/editUserProfile", {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        body: formData,
         credentials: "include",
-        body: JSON.stringify({ phonenumber, dailywordcount }),
       });
 
       const data = await response.json();
       if (response.ok) {
-        console.log("data");
         setEditDetails(true);
       } else {
         throw new Error(
@@ -147,9 +156,16 @@ export default function ProfilePage() {
       ) : editDetails ? (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 px-6 py-12">
           <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8 border border-gray-200">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">
-              Edit Details
-            </h2>
+            <div className="flex flex-row">
+              <div>
+                <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">
+                  Edit Details
+                </h2>
+              </div>
+              <div className="ml-auto">
+                <button onClick={handleProfile} className=" text-4xl  text-black">&times;</button>
+              </div>
+            </div>
             <form className="space-y-6">
               <div>
                 <label
@@ -163,7 +179,11 @@ export default function ProfilePage() {
                   id="phonenumber"
                   placeholder="Enter 10 digit Registered Phone number"
                   value={phonenumber ?? ""}
-                  onChange={(e) => setPhonenumber(e.target.value === "" ? undefined : e.target.value)}
+                  onChange={(e) =>
+                    setPhonenumber(
+                      e.target.value === "" ? undefined : e.target.value
+                    )
+                  }
                   className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
                 />
               </div>
@@ -179,7 +199,26 @@ export default function ProfilePage() {
                   id="dailywords"
                   placeholder="Enter No of Words"
                   value={dailywordcount ?? ""}
-                  onChange={(e) => setDailywordcount(e.target.value === "" ? undefined: e.target.value)}
+                  onChange={(e) =>
+                    setDailywordcount(
+                      e.target.value === "" ? undefined : e.target.value
+                    )
+                  }
+                  className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
+                />
+              </div>
+              <div>
+                <label
+                  className="block text-sm font-medium text-gray-700"
+                  htmlFor="profileimage"
+                >
+                  Profile Picture
+                </label>
+                <input
+                  type="file"
+                  id="profileimage"
+                  accept="image/*"
+                  onChange={handleFileUpload}
                   className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
                 />
               </div>
@@ -205,7 +244,7 @@ export default function ProfilePage() {
           <div className="flex flex-col items-center">
             <div>
               <img
-                src="https://i.ibb.co/Xxb9bKtw/Screenshot-626.png"
+                src={userDetails?.profileurl}
                 className="w-38 h-38 rounded-full border-4 black-border"
               ></img>
             </div>

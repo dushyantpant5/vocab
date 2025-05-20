@@ -18,7 +18,8 @@ export async function GET() {
       username: true,
       email: true,
       phonenumber: true,
-      dailywordcount: true
+      dailywordcount: true,
+      profileurl: true,
     },
   });
 
