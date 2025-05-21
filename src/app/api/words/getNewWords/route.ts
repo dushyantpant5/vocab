@@ -12,28 +12,20 @@ export async function GET() {
     return NextResponse.json({ error: "User ID not found" }, { status: 401 });
   }
 
-
   const unseenWords = await prisma.words.findMany({
     where: {
-      OR: [
-        {
-          wordprogress: {
-            none: {
-              userid: user.id,
-            },
-          },
+      assignedwords: {
+        some: {
+          user_id: user.id,
         },
-        {
-          wordprogress: {
-            some: {
-              userid: user.id,
-              islearned: false,
-            },
-          },
+      },
+      wordprogress: {
+        some: {
+          userid: user.id,
+          islearned: false,
         },
-      ],
+      },
     },
-    take: 5,
   });
 
   if (!unseenWords) {
@@ -42,39 +34,6 @@ export async function GET() {
       { status: 404 }
     );
   }
-
-  // Insert wordprogress entries for any that don't have them yet
-  await Promise.all(
-    unseenWords.map(async (word) => {
-      try {
-        const existingProgress = await prisma.wordprogress.findUnique({
-          where: {
-            userid_wordid: {
-              userid: user.id,
-              wordid: word.id,
-            },
-          },
-        });
-
-        if (!existingProgress) {
-          await prisma.wordprogress.create({
-            data: {
-              userid: user.id,
-              wordid: word.id,
-              islearned: false,
-            },
-          });
-        }
-      } catch {
-        return NextResponse.json(
-          {
-            error: `Failed to create word progress entry for word ID ${word.id}`,
-          },
-          { status: 500 }
-        );
-      }
-    })
-  );
 
   return NextResponse.json(unseenWords, { status: 200 });
 }
