@@ -14,13 +14,11 @@ export async function middleware(request: NextRequest) {
   const refreshToken = await getRefreshToken();
 
   if (!accessToken && !refreshToken) {
-    console.log("1");
     const callBackURL = new URL("/signIn", request.nextUrl.origin);
     return NextResponse.redirect(callBackURL);
   }
 
   if (!accessToken && refreshToken) {
-    console.log("2");
     try {
       const { data, error } = await supabase.auth.refreshSession({
         refresh_token: refreshToken,
