@@ -1,325 +1,122 @@
-"use client";
+'use client';
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 import { useState, useEffect } from "react";
-interface UserDetails {
-  username: string;
-  email: string;
-  phonenumber: string;
-  dailywordcount: string;
-  profileurl: string;
-  // add other properties if available, like id, phone, etc.
-}
-import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  LineElement,
-  PointElement,
-  CategoryScale,
-  LinearScale,
-  Tooltip,
-  Legend,
-} from "chart.js";
 
-ChartJS.register(
-  LineElement,
-  PointElement,
-  CategoryScale,
-  LinearScale,
-  Tooltip,
-  Legend
-);
+import ProfilePicture from "@/components/profile/ProfilePicture";
+import UserDetails from "@/components/profile/UserDetails";
+import StatCard from "@/components/profile/StatCard";
+import { LearnedWordChart } from "@/components/profile/LearnedWordChart";
+import { Button } from "@/components/ui/button";
+import UserProfileEditBox from "@/components/profile/UserProfileEditBox";
+
+
+export interface UserDetails {
+    username: string;
+    email: string;
+    phonenumber: string;
+    dailywordcount: string;
+    profileurl: string;
+}
+
 export default function ProfilePage() {
-  const [editDetails, setEditDetails] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
-  const [learnedWordsCount, setLearnedWordsCount] = useState("");
-  const [phonenumber, setPhonenumber] = useState<string | undefined>(undefined);
-  const [dailywordcount, setDailywordcount] = useState<string | undefined>(
-    undefined
-  );
-  const [profileurl, setProfileurl] = useState<File | null>(null);
-  const [loading, setLoading] = useState(true);
-  const labels = [
-    "7-5-2025",
-    "8-5-2025",
-    "9-5-2025",
-    "10-5-25",
-    "11-5-25",
-    "12-5-25",
-    "13-5-25",
-  ];
-  const dataPoints = [1, 1, 3, 5, 4, 5, 3];
-  const hoursSpent = [1, 2, 1, 4, 2, 1, 2];
-  const data = {
-    labels: labels,
-    datasets: [
-      {
-        label: "Weekly Learned Word",
-        data: dataPoints,
-        fill: false,
-        borderColor: "rgb(0, 0, 0)",
-        tension: 0.1,
-      },
-    ],
-  };
-  const data1 = {
-    labels: labels,
-    datasets: [
-      {
-        label: "Weekly Hours spent on platform",
-        data: hoursSpent,
-        fill: false,
-        borderColor: "rgb(0, 0, 0)",
-        tension: 0.1,
-      },
-    ],
-  };
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(`/api/user/getUserProfile`, {
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await res.json();
-        setUserDetails(data);
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
+    const [learnedWordsCount, setLearnedWordsCount] = useState("");
+    const [isEditing, setIsEditing] = useState(false);
 
-        // api call for fetching count of learned words
-        const wordRes = await fetch("/api/words/getLearnedWordCount", {
-          method: "GET",
-          credentials: "include",
-        });
-        const learnedWordCount = await wordRes.json();
-        setLearnedWordsCount(learnedWordCount.learnedWordsCount);
-      } catch (err) {
-        console.error(
-          `Failed to fetch user Profile getting error
-            ${err}`
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUserDetails();
-  }, [learnedWordsCount]);
+    useEffect(() => {
+        const fetchUserDetails = async () => {
+            try {
+                setLoading(true);
 
-  const handleProfile = () => {
-    setEditDetails(!editDetails);
-  };
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setProfileurl(file);
-    }
-  };
-  const setProfileData = async () => {
-    try {
-      const formData = new FormData();
-      if (phonenumber) formData.append("phonenumber", phonenumber);
-      if (dailywordcount) formData.append("dailywordcount", dailywordcount);
-      if (profileurl) formData.append("profileurl", profileurl);
-      const response = await fetch("/api/user/editUserProfile", {
-        method: "PATCH",
-        body: formData,
-        credentials: "include",
-      });
+                const res = await fetch(`/api/user/getUserProfile`, {
+                    method: "GET",
+                    credentials: "include",
+                });
+                const data = await res.json();
+                console.log(data);
+                setUserDetails(data);
 
-      const data = await response.json();
-      if (response.ok) {
-        setEditDetails(true);
-      } else {
-        throw new Error(
-          data.error ||
-            "Please Enter 10 digit phone number or Please Enter word count between 1 to 20"
-        );
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        if (err instanceof Error) {
-          console.error(err);
-          console.log(err);
-          setError(err.message);
-        } else {
-          setError("An unknown error occurred");
-        }
-      }
-    }
-  };
+                // api call for fetching count of learned words
+                const wordRes = await fetch("/api/words/getLearnedWordCount", {
+                    method: "GET",
+                    credentials: "include",
+                });
+                const learnedWordCount = await wordRes.json();
+                setLearnedWordsCount(learnedWordCount.learnedWordsCount);
+            } catch (err) {
+                setError("Failed to fetch user details");
+                console.error(
+                    `Failed to fetch user Profile getting error
+                      ${err}`
+                );
+            } finally {
+                setLoading(false);
+            }
+        };
 
-  return (
-    <div
-      className="bg-gradient-to-r from-violet-200 to-pink-200 p-8 rounded-md mx-0 my-0 
-"
-    >
-      {loading ? (
-        <p className="text-gray-600">Loading...</p>
-      ) : editDetails ? (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-6 py-12">
-          <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8 border border-gray-200">
-            <div className="flex flex-row">
-              <div>
-                <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">
-                  Edit Details
-                </h2>
-              </div>
-              <div className="ml-auto">
-                <button onClick={handleProfile} className=" text-4xl  text-black">&times;</button>
-              </div>
-            </div>
-            <form className="space-y-6">
-              <div>
-                <label
-                  className="block text-sm font-medium text-gray-700"
-                  htmlFor="phonenumber"
-                >
-                  Enter Phone Number
-                </label>
-                <input
-                  type="text"
-                  id="phonenumber"
-                  placeholder="Enter 10 digit Registered Phone number"
-                  value={phonenumber ?? ""}
-                  onChange={(e) =>
-                    setPhonenumber(
-                      e.target.value === "" ? undefined : e.target.value
-                    )
-                  }
-                  className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
-                />
-              </div>
-              <div>
-                <label
-                  className="block text-sm font-medium text-gray-700"
-                  htmlFor="dailywords"
-                >
-                  Enter Number of Words you want to learn
-                </label>
-                <input
-                  type="text"
-                  id="dailywords"
-                  placeholder="Enter No of Words"
-                  value={dailywordcount ?? ""}
-                  onChange={(e) =>
-                    setDailywordcount(
-                      e.target.value === "" ? undefined : e.target.value
-                    )
-                  }
-                  className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
-                />
-              </div>
-              <div>
-                <label
-                  className="block text-sm font-medium text-gray-700"
-                  htmlFor="profileimage"
-                >
-                  Profile Picture
-                </label>
-                <input
-                  type="file"
-                  id="profileimage"
-                  accept="image/*"
-                  onChange={handleFileUpload}
-                  className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
-                />
-              </div>
-              {error && (
-                <p className="text-sm text-red-500 text-center">
-                  Please Check Your Phone Number and Word Count
-                </p>
-              )}
-              <div>
-                <button
-                  onClick={setProfileData}
-                  type="submit"
-                  className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all disabled:bg-gray-400"
-                >
-                  Save Details
-                </button>
-              </div>
-            </form>
-          </div>
+        fetchUserDetails();
+    }, []);
+
+    return (
+        <div className="min-h-screen bg-gradient-to-r from-blue-200 to-indigo-200 p-8">
+            {loading ? (
+                <LoadingSkeleton variant="profile" />
+            ) : error ? (
+                <div className="flex flex-col items-center space-y-6">
+                    <h1 className="text-2xl font-semibold text-red-600">{error}</h1>
+                    <p className="text-center text-blue-500">Please try again later.</p>
+                </div>
+            ) : userDetails ? (
+                <div className="flex flex-col items-center space-y-6">
+                    <div className="flex flex-col items-center space-y-2">
+                        <ProfilePicture profileUrl={userDetails?.profileurl} />
+                        <UserDetails userDetails={userDetails} />
+
+                        <Button
+                            onClick={() => setIsEditing(true)}
+                            className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:cursor-pointer hover:bg-blue-700 hover:shadow-lg transition duration-300 ease-in-out"
+                        >
+                            Edit Profile
+                        </Button>
+
+                        {isEditing && (
+                            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30">
+                                <UserProfileEditBox
+                                    phoneNumber={userDetails?.phonenumber}
+                                    dailyWordCount={userDetails?.dailywordcount}
+                                    setIsEditing={setIsEditing}
+                                    setUserDetails={setUserDetails}
+                                />
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-4xl">
+                        <StatCard label="AVERAGE HOURS SPENT" value="-" />
+                        <StatCard
+                            label="DAILY DASHBOARD WORD COUNT"
+                            value={`${userDetails?.dailywordcount} Words`}
+                        />
+                        <StatCard
+                            label="TOTAL WORDS LEARNED"
+                            value={`${learnedWordsCount} Words`}
+                        />
+                        <StatCard label="AVG WORDS / WEEK" value="-" />
+                        <StatCard label="AVG WORDS / MONTH" value="-" />
+                    </div>
+
+                    <LearnedWordChart />
+                </div>
+            ) : (
+                <div className="flex flex-col items-center space-y-6">
+                    <h1 className="text-2xl font-semibold text-red-600">User not found</h1>
+                    <p className="text-center text-blue-500">Please try again later.</p>
+                </div>
+            )}
         </div>
-      ) : (
-        <div className="flex flex-col items-center space-y-6 -mx-2.5  ">
-          <div className="flex flex-col items-center">
-            <div>
-              <img
-                src={userDetails?.profileurl}
-                className="w-38 h-38 rounded-full border-4 black-border"
-              ></img>
-            </div>
-            <div
-              onClick={handleProfile}
-              className="text-xl border-2 border-white p-2 rounded-md font-bold bg-black text-white"
-            >
-              Edit 📝
-            </div>
+    );
 
-            <div className="text-2xl font-bold">{userDetails?.username}</div>
-            <div className="text-sm">{userDetails?.email}</div>
-            <div className="text-sm">{userDetails?.phonenumber}</div>
-          </div>
-          <div className="flex flex-row space-x-6 border-2 p-3 rounded-md shadow-md backdrop-blur-md">
-            <div className="flex flex-col">
-              <div className="text-xs">AVERAGE HOURS SPENT</div>
-              <div className="text-lg font-bold">3.5 hrs</div>
-            </div>
-            <div className="flex flex-col">
-              <div className="text-xs">
-                DAILY DASHBOARD <br /> WORD COUNT
-              </div>
-              <div className="text-lg font-bold">
-                {userDetails?.dailywordcount} Words
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <div className="text-xs">
-                TOTAL LEARNED <br /> WORDS <br />
-                LEARNED
-              </div>
-              <div className="text-lg font-bold">{learnedWordsCount} Words</div>
-            </div>
-            <div className="flex flex-col">
-              <div className="text-xs">
-                AVERAGE WORDS <br /> LEARNED PER WEEK
-              </div>
-              <div className="text-lg font-bold">2 Words</div>
-            </div>
-            <div className="flex flex-col">
-              <div className="text-xs">
-                AVERAGE WORDS <br /> LEARNED PER
-                <br /> MONTH
-              </div>
-              <div className="text-lg font-bold">1 Word</div>
-            </div>
-          </div>
-          <div className="flex flex-col border-2 p-3 rounded-md shadow-md backdrop-blur-md">
-            <div className="text-xl font-bold">Dashboard</div>
-            <div className="flex flex-row">
-              <div className="my-4 h-80 w-full">
-                {/* <img
-                src="https://i.ibb.co/tPLR7XJm/Learning-Metrics-Over-Time-Chart.png"
-                className="h-102"
-              ></img> */}
-                <Line
-                  data={data}
-                  options={{
-                    maintainAspectRatio: false, // This allows custom height
-                  }}
-                ></Line>
-              </div>
-              <div className="my-4 h-80 w-full">
-                <Line
-                  data={data1}
-                  options={{
-                    maintainAspectRatio: false, // This allows custom height
-                  }}
-                ></Line>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
 }
+
