@@ -1,0 +1,29 @@
+name: Lint Supabase SQL
+
+on:
+  pull_request:
+    paths:
+      - 'supabase/functions/**/*.sql'
+      - 'supabase/migrations/**/*.sql'
+
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'supabase/functions/**/*.sql'
+      - 'supabase/migrations/**/*.sql'
+
+jobs:
+  lint-sql:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Supabase CLI
+        run: npm install -g supabase
+
+      - name: Run SQL lint
+        run: supabase db lint
