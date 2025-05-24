@@ -9,10 +9,16 @@ on:
 jobs:
   lint-and-validate:
     runs-on: ubuntu-latest
-    if: github.head_ref != 'develop'
+    if: github.head_ref != 'develop'  # skip if PR source branch is develop
     steps:
-      - name: Checkout code
+      - name: Checkout code with full history
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Fetch origin/develop for diff
+        run: |
+          git fetch origin develop
 
       - name: Validate migration filenames
         run: |
@@ -27,9 +33,11 @@ jobs:
 
       - name: Check function files have matching migration files and verify exact match
         run: |
+          # Get changed function files comparing PR branch against origin/develop
           changed_functions=$(git diff --name-only origin/develop -- supabase/functions/*.sql || echo "")
+          
           if [ -z "$changed_functions" ]; then
-            echo "No function files changed; skipping migration checks."
+            echo "No function files changed compared to origin/develop; skipping migration checks."
             exit 0
           fi
 
