@@ -1,3 +1,5 @@
+--- Migration check
+
 CREATE OR REPLACE FUNCTION public.assign_daily_words()
 RETURNS void
 LANGUAGE plpgsql
