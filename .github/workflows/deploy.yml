@@ -30,7 +30,7 @@ jobs:
         env:
           SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
-        run: npx supabase db deploy --project-ref $SUPABASE_PROJECT_REF --db-url "$DIRECT_URL"        
+        run: npx supabase db deploy --db-url "$DIRECT_URL"        
       
       - name: Generate Prisma Client
         env:
