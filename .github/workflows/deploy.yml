@@ -26,7 +26,6 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
         run: |
-          supabase login --no-browser --service-role-key $SUPABASE_SERVICE_ROLE_KEY
           supabase db deploy --project-ref $SUPABASE_PROJECT_REF --db-url "$DIRECT_URL"
 
       - name: Setup Node.js
