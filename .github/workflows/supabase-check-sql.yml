@@ -35,11 +35,16 @@ jobs:
         run: |
           # Get changed function files comparing PR branch against origin/develop
           changed_functions=$(git diff --name-only origin/develop -- supabase/functions/*.sql || echo "")
-          
+
           if [ -z "$changed_functions" ]; then
             echo "No function files changed compared to origin/develop; skipping migration checks."
             exit 0
           fi
+
+          echo "Changed function files compared to origin/develop:"
+          for func_path in $changed_functions; do
+            echo " - $func_path"
+          done
 
           for func_path in $changed_functions; do
             func_name=$(basename "$func_path" .sql)
@@ -57,8 +62,14 @@ jobs:
             fi
           done
 
+          echo "All function files match their latest migrations."
+
       - name: Run Supabase SQL lint
         env:
           DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
           npx supabase db lint --db-url "$DATABASE_URL"
+
+      - name: Print success message
+        if: success()
+        run: echo "✅ Lint and migration validation passed successfully."
