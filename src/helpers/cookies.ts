@@ -11,7 +11,7 @@ const setAccessToken = async (token: string, response: NextResponse) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: 60 * 60, // 1 hour
+    maxAge: 60 * 60, //1 hour
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
   return response;
@@ -24,7 +24,7 @@ const setRefreshToken = (token: string, response: NextResponse) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: 60 * 60 * 24 * 30, // 30 days
+    maxAge: 60 * 60 * 24 * 7, // 7 days
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
   return response;
@@ -74,8 +74,16 @@ const getAccessToken = async (): Promise<string | null> => {
   return null;
 };
 
+const getRefreshToken = async (): Promise<string | null> => {
+  const cookieStore = await cookies();
+  const refreshTokenValue = cookieStore.get(refreshToken);
+  return refreshTokenValue ? refreshTokenValue.value : null;
+};
+
 export {
   setTokensAtTheTimeOfSignIn,
   getAccessToken,
   removeTokesAtTheTimeOfSignOut,
+  getRefreshToken,
+  setAccessToken
 };

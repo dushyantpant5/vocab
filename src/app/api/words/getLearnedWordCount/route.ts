@@ -12,28 +12,23 @@ export async function GET() {
     return NextResponse.json({ error: "User ID not found" }, { status: 401 });
   }
 
-  const unseenWords = await prisma.words.findMany({
+  const learnedWordsCount = await prisma.words.count({
     where: {
-      assignedwords: {
-        some: {
-          user_id: user.id,
-        },
-      },
       wordprogress: {
         some: {
           userid: user.id,
-          islearned: false,
+          islearned: true,
         },
       },
     },
   });
 
-  if (!unseenWords) {
+  if (!learnedWordsCount) {
     return NextResponse.json(
-      { error: "No unseen words found" },
+      { error: "No learned words found" },
       { status: 404 }
     );
-  }
+}
 
-  return NextResponse.json(unseenWords, { status: 200 });
+  return NextResponse.json({ learnedWordsCount }, { status: 200 });
 }
