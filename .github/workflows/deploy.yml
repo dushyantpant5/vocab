@@ -29,8 +29,8 @@ jobs:
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
         env:
           SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
-          DIRECT_URL: ${{ secrets.DIRECT_URL }}
-        run: npx supabase db deploy --db-url "$DIRECT_URL"        
+          SUPABASE_DB_URL: ${{ secrets.DIRECT_URL }}
+        run: npx supabase db push --project-ref $SUPABASE_PROJECT_REF      
       
       - name: Generate Prisma Client
         env:
