@@ -18,7 +18,7 @@ jobs:
 
       # Apply Migrations to Supabase
       - name: Install Supabase CLI
-        uses: supabase/cli-action@v1
+        run: curl -fsSL https://cli.supabase.com/install.sh | sh
         
       - name: Push Supabase Migrations (main & develop only)
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
