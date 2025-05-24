@@ -3,8 +3,8 @@ RETURNS void
 LANGUAGE plpgsql
 AS $$
 DECLARE
-  v_user_id UUID; --Store user ID
-  v_word_id UUID; --Store word ID
+  v_user_id UUID; --Store User ID
+  v_word_id UUID; --Store Word ID
   unlearned_count INT; --Count of unlearned words for the user
 BEGIN
   -- Loop through all users
