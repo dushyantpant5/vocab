@@ -1,4 +1,4 @@
---- Migration check
+--- Migration check , this will fail
 
 CREATE OR REPLACE FUNCTION public.assign_daily_words()
 RETURNS void
