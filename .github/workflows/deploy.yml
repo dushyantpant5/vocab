@@ -16,14 +16,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Upply Migrations to Supabase
+      # Apply Migrations to Supabase
+      - name: Install Supabase CLI
+        uses: supabase/cli-action@v1
+        
       - name: Push Supabase Migrations (main & develop only)
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
         env:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
         run: |
-          npm install -g supabase
           supabase login --no-browser --service-role-key $SUPABASE_SERVICE_ROLE_KEY
           supabase db deploy --project-ref $SUPABASE_PROJECT_REF --db-url "$DIRECT_URL"
 
