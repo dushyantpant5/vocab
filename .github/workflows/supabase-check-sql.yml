@@ -9,6 +9,7 @@ on:
 jobs:
   lint-and-validate:
     runs-on: ubuntu-latest
+    if: github.head_ref != 'develop'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
