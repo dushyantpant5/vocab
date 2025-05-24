@@ -22,8 +22,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Supabase CLI
-        run: npm install -g supabase
-
-      - name: Run SQL lint
-        run: supabase db lint
+      - name: Run Supabase SQL lint
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}  
+        run: |
+          npx supabase db lint --db-url "$DATABASE_URL"
