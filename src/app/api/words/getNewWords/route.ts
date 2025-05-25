@@ -16,7 +16,6 @@ export async function GET() {
   const cacheKey = `dashboardWords:${user.id}:all`;
   const cachedDashboardWords = await redis.get(cacheKey);
   if (cachedDashboardWords) {
-    console.log("Returning cached dashboard words");
     return NextResponse.json(
       cachedDashboardWords ,
       { status: 200 }
