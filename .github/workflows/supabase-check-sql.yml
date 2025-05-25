@@ -2,9 +2,7 @@ name: Lint Supabase SQL & Validate Migrations
 
 on:
   pull_request:
-    paths:
-      - 'supabase/functions/**/*.sql'
-      - 'supabase/migrations/**/*.sql'
+
 
 jobs:
   lint-and-validate:
