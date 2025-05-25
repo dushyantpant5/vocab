@@ -20,7 +20,30 @@ jobs:
         run: |
           git fetch origin develop
 
+      - name: Check if any SQL files changed
+        id: check_diff
+        run: |
+          changed_funcs=$(git diff --name-only origin/develop -- supabase/functions/*.sql || true)
+          changed_migs=$(git diff --name-only origin/develop -- supabase/migrations/*.sql || true)
+
+          echo "Changed function files:"
+          echo "$changed_funcs"
+
+          echo "Changed migration files:"
+          echo "$changed_migs"
+
+          # Save to outputs for later steps
+          echo "functions_changed=$(if [ -n \"$changed_funcs\" ]; then echo true; else echo false; fi)" >> $GITHUB_OUTPUT
+          echo "migrations_changed=$(if [ -n \"$changed_migs\" ]; then echo true; else echo false; fi)" >> $GITHUB_OUTPUT
+
+      - name: Skip job if no changes
+        if: steps.check_diff.outputs.functions_changed == 'false' && steps.check_diff.outputs.migrations_changed == 'false'
+        run: |
+          echo "No changes detected in functions or migrations. Skipping checks."
+          exit 0
+
       - name: Validate migration filenames
+        if: steps.check_diff.outputs.migrations_changed == 'true'
         run: |
           for file in supabase/migrations/*.sql; do
             filename=$(basename "$file")
@@ -32,14 +55,9 @@ jobs:
           echo "All migration filenames have valid timestamp prefixes."
 
       - name: Check function files have matching migration files and verify exact match
+        if: steps.check_diff.outputs.functions_changed == 'true'
         run: |
-          # Get changed function files comparing PR branch against origin/develop
           changed_functions=$(git diff --name-only origin/develop -- supabase/functions/*.sql || echo "")
-
-          if [ -z "$changed_functions" ]; then
-            echo "No function files changed compared to origin/develop; skipping migration checks."
-            exit 0
-          fi
 
           echo "Changed function files compared to origin/develop:"
           for func_path in $changed_functions; do
@@ -65,6 +83,7 @@ jobs:
           echo "All function files match their latest migrations."
 
       - name: Run Supabase SQL lint
+        if: steps.check_diff.outputs.functions_changed == 'true' || steps.check_diff.outputs.migrations_changed == 'true'
         env:
           DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
