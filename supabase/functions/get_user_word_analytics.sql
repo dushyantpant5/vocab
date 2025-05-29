@@ -2,12 +2,12 @@ CREATE OR REPLACE PROCEDURE public.update_user_word_analytics()
 LANGUAGE plpgsql
 AS $$
 DECLARE
-  current_date DATE;
+  current_date_var DATE := CURRENT_DATE - INTERVAL '7 days';
+  end_date DATE := CURRENT_DATE - INTERVAL '1 day';
 BEGIN
-  -- Loop through the last 7 days excluding today
-  FOR current_date IN (CURRENT_DATE - INTERVAL '7 days')::DATE .. (CURRENT_DATE - INTERVAL '1 day')::DATE LOOP
-
-    -- Insert or update word learning analytics for each user on that specific date
+  -- Loop over each date from 7 days ago up to yesterday
+  WHILE current_date_var <= end_date LOOP
+    -- Insert or update analytics for each user on current_date_var
     INSERT INTO public.user_word_analytics (
       userid,
       date,
@@ -17,20 +17,20 @@ BEGIN
     )
     SELECT
       userid,
-      current_date AS date,
+      current_date_var AS date,
       COUNT(*) AS words_learned_count,
       now() AS created_at,
       now() AS updated_at
     FROM public.wordprogress
-    WHERE learnedatdate = current_date
+    WHERE "learnedAtDate" = current_date_var
       AND islearned = true
     GROUP BY userid
-
-    -- If record exists for the same user and date, update it
     ON CONFLICT (userid, date) DO UPDATE
     SET words_learned_count = EXCLUDED.words_learned_count,
         updated_at = now();
 
+    -- Move to next date
+    current_date_var := current_date_var + INTERVAL '1 day';
   END LOOP;
 END;
 $$;
