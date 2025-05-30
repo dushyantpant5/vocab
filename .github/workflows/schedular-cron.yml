@@ -8,24 +8,20 @@ on:
 jobs:
   call-supabase-functions:
     runs-on: ubuntu-latest
-    env:
-      SUPABASE_API_KEY: ${{ secrets.SUPABASE_API_KEY }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-      SUPABASE_URL: https://eakvpbpzruxtwmcvkltc.supabase.co
 
     steps:
       - name: Call assign_daily_words
         run: |
-          curl -X POST "$SUPABASE_URL/rest/v1/rpc/assign_daily_words" \
-          -H "apikey: $SUPABASE_API_KEY" \
-          -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+          curl -X POST "https://eakvpbpzruxtwmcvkltc.supabase.co/rest/v1/rpc/assign_daily_words" \
+          -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVha3ZwYnB6cnV4dHdtY3ZrbHRjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDk2MjI2OCwiZXhwIjoyMDYwNTM4MjY4fQ.P_m8AnpuN4eWtKDJiGNN3xq5nwJllKlgy8oP-Ip1YX0" \
+          -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVha3ZwYnB6cnV4dHdtY3ZrbHRjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDk2MjI2OCwiZXhwIjoyMDYwNTM4MjY4fQ.P_m8AnpuN4eWtKDJiGNN3xq5nwJllKlgy8oP-Ip1YX0" \
           -H "Content-Type: application/json" \
           -d '{"run_type":"auto"}'
 
       - name: Call get_user_word_analytics
         run: |
-          curl -X POST "$SUPABASE_URL/rest/v1/rpc/get_user_word_analytics" \
-          -H "apikey: $SUPABASE_API_KEY" \
-          -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+          curl -X POST "https://eakvpbpzruxtwmcvkltc.supabase.co/rest/v1/rpc/get_user_word_analytics" \
+          -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVha3ZwYnB6cnV4dHdtY3ZrbHRjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDk2MjI2OCwiZXhwIjoyMDYwNTM4MjY4fQ.P_m8AnpuN4eWtKDJiGNN3xq5nwJllKlgy8oP-Ip1YX0" \
+          -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVha3ZwYnB6cnV4dHdtY3ZrbHRjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDk2MjI2OCwiZXhwIjoyMDYwNTM4MjY4fQ.P_m8AnpuN4eWtKDJiGNN3xq5nwJllKlgy8oP-Ip1YX0" \
           -H "Content-Type: application/json" \
           -d '{"run_type":"auto"}'
