@@ -1,0 +1,25 @@
+name: Run Supabase Functions Daily
+
+on:
+  schedule:
+    - cron: '30 18 * * *'  # Runs daily at 12:00 AM IST (UTC+5:30)
+
+jobs:
+  call-supabase-functions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call assign_daily_words
+        run: |
+          curl -X POST "https://eakvpbpzruxtwmcvkltc.supabase.co/rest/v1/rpc/assign_daily_words" \
+          -H "apikey: ${{ secrets.SUPABASE_API_KEY }}" \
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d '{"run_type":"auto"}'
+
+      - name: Call get_user_word_analytics
+        run: |
+          curl -X POST "https://eakvpbpzruxtwmcvkltc.supabase.co/rest/v1/rpc/get_user_word_analytics" \
+          -H "apikey: ${{ secrets.SUPABASE_API_KEY }}" \
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d '{"run_type":"auto"}'
