@@ -1,5 +1,4 @@
-CREATE OR REPLACE FUNCTION public.get_user_word_analytics(run_type text default 'auto')
-RETURNS void
+CREATE OR REPLACE PROCEDURE public.get_user_word_analytics(run_type text default 'auto')
 LANGUAGE plpgsql
 AS $$
 DECLARE
