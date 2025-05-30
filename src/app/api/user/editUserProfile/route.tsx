@@ -15,11 +15,11 @@ export async function PATCH(request: Request) {
 
   const profileUpdateData = await request.formData();
   const phonenumber = profileUpdateData.get("phonenumber") as string | undefined;
-  const dailywordcount = profileUpdateData.get("dailywordcount") as string | undefined;
+  const dailyWordCount = profileUpdateData.get("dailywordcount") as string | undefined;
 
   const profileDataValidation = profileEditSchema.safeParse({
     phonenumber,
-    dailywordcount,
+    dailyWordCount,
   });
 
   if (!profileDataValidation.success) {
@@ -30,16 +30,15 @@ export async function PATCH(request: Request) {
   }
 
   try {
-    const updateData: { phonenumber?: string; dailywordcount?: string; } = {};
+    const updateData: { phonenumber?: string; dailywordcount?: number; } = {};
 
     updateData.phonenumber = phonenumber == undefined ? undefined : phonenumber;
-    updateData.dailywordcount = dailywordcount == undefined ? undefined : dailywordcount;
-
+    updateData.dailywordcount = dailyWordCount == undefined ? 5 : parseInt(dailyWordCount);
     await prisma.user_profiles.update({
       where: {
         id: user.id,
       },
-      data: updateData,
+      data: updateData
     });
 
     return NextResponse.json(

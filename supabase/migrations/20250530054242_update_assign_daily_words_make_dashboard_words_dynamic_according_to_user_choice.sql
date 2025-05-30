@@ -6,7 +6,7 @@ DECLARE
   v_user_id UUID; --Store User ID
   v_word_id UUID; --Store Word ID
   unlearned_count INT; --Count of unlearned words for the users
-  v_dailywordcount INT;
+  v_dailywordcount Varchar;
 BEGIN
   -- Loop through all users
   FOR v_user_id,v_dailywordcount IN SELECT id,dailywordcount FROM user_profiles LOOP
