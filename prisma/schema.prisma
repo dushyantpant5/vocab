@@ -333,7 +333,7 @@ model user_profiles {
   email               String                @unique @db.VarChar(255)
   createdat           DateTime?             @default(now()) @db.Timestamp(6)
   updatedat           DateTime?             @default(now()) @db.Timestamp(6)
-  dailywordcount      String?               @default("5")
+  dailywordcount      Int?                  @default(5)
   phonenumber         String?
   profileurl          String?               @default("https://i.ibb.co/DHNnmJxg/pexels-vojtech-okenka-127162-399772.jpg")
   assignedwords       assignedwords[]

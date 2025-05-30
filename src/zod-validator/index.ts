@@ -22,7 +22,7 @@ const profileEditSchema = z.object({
   phonenumber: z.string()
   .regex(/^\d{10}$/, "Phone number must contain only digits")
   .optional(),
-  dailywordcount: z
+  dailyWordCount: z
   .string()
   .regex(/^\d+$/, "Daily word count must contain only digits")
   .refine((val) => {
