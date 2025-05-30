@@ -1,0 +1,92 @@
+name: Lint Supabase SQL & Validate Migrations
+
+on:
+  pull_request:
+
+
+jobs:
+  lint-and-validate:
+    runs-on: ubuntu-latest
+    if: github.head_ref != 'develop'  # skip if PR source branch is develop
+    steps:
+      - name: Checkout code with full history
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Fetch origin/develop for diff
+        run: |
+          git fetch origin develop
+
+      - name: Check if any SQL files changed
+        id: check_diff
+        run: |
+          changed_funcs=$(git diff --name-only origin/develop -- supabase/functions/*.sql || true)
+          changed_migs=$(git diff --name-only origin/develop -- supabase/migrations/*.sql || true)
+
+          echo "Changed function files:"
+          echo "$changed_funcs"
+
+          echo "Changed migration files:"
+          echo "$changed_migs"
+
+          # Save to outputs for later steps
+          echo "functions_changed=$(if [ -n \"$changed_funcs\" ]; then echo true; else echo false; fi)" >> $GITHUB_OUTPUT
+          echo "migrations_changed=$(if [ -n \"$changed_migs\" ]; then echo true; else echo false; fi)" >> $GITHUB_OUTPUT
+
+      - name: Skip job if no changes
+        if: steps.check_diff.outputs.functions_changed == 'false' && steps.check_diff.outputs.migrations_changed == 'false'
+        run: |
+          echo "No changes detected in functions or migrations. Skipping checks."
+          exit 0
+
+      - name: Validate migration filenames
+        if: steps.check_diff.outputs.migrations_changed == 'true'
+        run: |
+          for file in supabase/migrations/*.sql; do
+            filename=$(basename "$file")
+            if ! [[ "$filename" =~ ^[0-9]{14}_.+\.sql$ ]]; then
+              echo "ERROR: Migration file '$filename' does NOT follow timestamp prefix pattern (YYYYMMDDHHMMSS_...)."
+              exit 1
+            fi
+          done
+          echo "All migration filenames have valid timestamp prefixes."
+
+      - name: Check function files have matching migration files and verify exact match
+        if: steps.check_diff.outputs.functions_changed == 'true'
+        run: |
+          changed_functions=$(git diff --name-only origin/develop -- supabase/functions/*.sql || echo "")
+
+          echo "Changed function files compared to origin/develop:"
+          for func_path in $changed_functions; do
+            echo " - $func_path"
+          done
+
+          for func_path in $changed_functions; do
+            func_name=$(basename "$func_path" .sql)
+            migrations_found=$(ls supabase/migrations/*_${func_name}_*.sql 2>/dev/null || echo "")
+            if [ -z "$migrations_found" ]; then
+              echo "ERROR: No migration file found for changed function '$func_name'"
+              exit 1
+            fi
+
+            latest_migration=$(ls -1 supabase/migrations/*_${func_name}_*.sql | sort | tail -n1)
+            diff_output=$(diff "$func_path" "$latest_migration" || true)
+            if [ -n "$diff_output" ]; then
+              echo "ERROR: Function file '$func_path' differs from its latest migration '$latest_migration'"
+              exit 1
+            fi
+          done
+
+          echo "All function files match their latest migrations."
+
+      - name: Run Supabase SQL lint
+        if: steps.check_diff.outputs.functions_changed == 'true' || steps.check_diff.outputs.migrations_changed == 'true'
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          npx supabase db lint --db-url "$DATABASE_URL"
+
+      - name: Print success message
+        if: success()
+        run: echo "✅ Lint and migration validation passed successfully."

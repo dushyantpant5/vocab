@@ -44,7 +44,9 @@ export default function ProfilePage() {
                     credentials: "include",
                 });
                 const learnedWordCount = await wordRes.json();
-                setLearnedWordsCount(learnedWordCount.learnedWordsCount);
+                // lwc in used to typecast int to string for setting in
+                const lwc = learnedWordCount.learnedWordsCount;
+                setLearnedWordsCount(lwc.toString());
             } catch (err) {
                 setError("Failed to fetch user details");
                 console.error(
