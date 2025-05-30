@@ -404,6 +404,16 @@ model user_word_analytics {
   @@schema("public")
 }
 
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model function_logs {
+  id            Int       @id @default(autoincrement())
+  function_name String
+  run_time      DateTime? @default(now()) @db.Timestamptz(6)
+  run_type      String
+
+  @@schema("public")
+}
+
 enum aal_level {
   aal1
   aal2
